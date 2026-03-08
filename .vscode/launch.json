@@ -1,0 +1,35 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Inscryption",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/${input:fileName}",
+            "args": [
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Build Compiler",
+            "miDebuggerPath": "/usr/bin/gdb"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "fileName",
+            "type": "promptString",
+            "description": "Enter the Executable Name - In MakeFile",
+            "default": "inscryption"
+        }
+    ]
+}
