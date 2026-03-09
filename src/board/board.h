@@ -1,15 +1,27 @@
-#include <vector>
+#include <array>
 #include <iostream>
+#include "../entities/player.h"
+#include "../entities/enemy.h"
+#include "../entities/entity.h"
 #include "card.h"
 
 class Board {
 
     private:
-        std::vector<int> cardsOnBoard;
+        std::array<int, 3>* board[3];
+
+        // Board looks like 
+        // [] [] [] <- next card that enemy is going to play
+
+        // [] [] [] <- active enemy cards
+        // [] [] [] <- your active cards
+        std::array<int, 3> enemyActiveCards{{-1, -1, -1}};
+        std::array<int, 3> enemyPreCards{{-1, -1, -1}};
+        std::array<int, 3> playerActiveCards{{-1, -1, -1}};
+        
 
     public:
-        void placeCard();
-        void removeCard(int cardId);
+        void placeCard(entityType et, const int& cardId, const int& pos);
+        void removeCard(entityType et, int cardId);
         void printBoard(); 
-
 };
