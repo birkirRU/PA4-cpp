@@ -35,3 +35,12 @@ void Board::removeCard(entityType et, int cardId) {
         }
     }
 }
+
+void Board::printBoard() {
+    std::cout << "Enemy next: ";
+    std::cout << "[" << enemyPreCards[0] << "] " << "[" << enemyPreCards[1] << "] " << "[" << enemyPreCards[2] << "] " << std::endl;
+    std::cout << "Enemy Current: ";
+    std::cout << "[" << enemyActiveCards[0] << "] " << "[" << enemyActiveCards[1] << "] " << "[" << enemyActiveCards[2] << "] " << std::endl;
+    std::cout << "Player: ";
+    std::cout << "[" << playerActiveCards[0] << "] " << "[" << playerActiveCards[1] << "] " << "[" << playerActiveCards[2] << "] " << std::endl;
+};

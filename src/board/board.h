@@ -11,13 +11,12 @@
 class Board {
 
     private:
-        std::array<int, 3>* board[3];
 
         // Board looks like 
         // [] [] [] <- next card that enemy is going to play
-
         // [] [] [] <- active enemy cards
         // [] [] [] <- your active cards
+        
         std::array<int, 3> enemyActiveCards{{-1, -1, -1}};
         std::array<int, 3> enemyPreCards{{-1, -1, -1}};
         std::array<int, 3> playerActiveCards{{-1, -1, -1}};

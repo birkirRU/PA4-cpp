@@ -2,6 +2,7 @@
 #define DECK_DECK_H_
 
 #include "../card/card.h"
+#include "../card/cardinstance.h"
 #include "../card/bullfrog.h"
 
 #include <variant>

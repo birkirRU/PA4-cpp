@@ -2,7 +2,9 @@
 
 Enemy::Enemy(int health) : Entity(health) {
 
-    // Initialize
     deckObj.addCard(Bullfrog());
-    // ...
+    deckObj.addCard(Wolf());
+    deckObj.addCard(Raven());
+    deckObj.addCard(GreatWhite());
+    deckObj.addCard(WolfCub());
 }

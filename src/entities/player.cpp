@@ -3,11 +3,16 @@
 
 Player::Player(int health) : Entity(health) {
     
-    // Initialize decks
     deckObj.addCard(Bullfrog());
-    // ...
-    for (int i = 0; i < 10; i++) {
-        // squirrelDeck.addCard(Squirrel());
-    }
+    deckObj.addCard(Wolf());
+    deckObj.addCard(Raven());
+    deckObj.addCard(GreatWhite());
+    deckObj.addCard(WolfCub());
 
 }
+
+void Player::drawSquirrel() {
+    hand.push_back(Squirrel());
+}
+
+

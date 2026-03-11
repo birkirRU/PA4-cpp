@@ -4,25 +4,16 @@
 #include <variant>
 #include "../sigil/sigil.h"
 #include <vector>
+#include "bullfrog.h"
+#include "great_white.h"
+#include "raven.h"
+#include "squirrel.h"
+#include "wolf_cup.h"
+#include "wolf.h"
 
 enum struct ActionType {
     BLOCK,
     ATTACK
-};
-
-struct CardInstance {
-
-    const int id;
-    std::variant<std::monostate, Bullfrog> card;
-
-    CardInstance() : id(-1), card(std::monostate{}) {}
-
-    template<typename CardType>
-    CardInstance(const CardType& card) : id(_nextId()), card(card) {}
-
-    
-private:
-    static int _nextId();
 };
 
 
