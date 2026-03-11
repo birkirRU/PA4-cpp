@@ -1,3 +1,6 @@
+#ifndef CARD_BULLFROG_H_
+#define CARD_BULLFROG_H_
+
 #include "card.h"
 
 class Bullfrog : public Card<Bullfrog> {
@@ -6,3 +9,4 @@ public:
     void block();
     void attack();
 };
+#endif // CARD_BULLFROG_H_

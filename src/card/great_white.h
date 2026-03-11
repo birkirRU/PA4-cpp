@@ -1,0 +1,5 @@
+#ifndef CARD_GREAT_WHITE_H_
+#define CARD_GREAT_WHITE_H_
+
+
+#endif // CARD_GREAT_WHITE_H_

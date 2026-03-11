@@ -1,3 +1,6 @@
+#ifndef INSCRYPTION_H_
+#define INSCRYPTION_H_
+
 #include "sigil/sigil.h"
 #include "deck/deck.h"
 #include "board/board.h"
@@ -17,3 +20,4 @@ class Game {
         void startGame();
         void endGame();
 };
+#endif // INSCRYPTION_H_

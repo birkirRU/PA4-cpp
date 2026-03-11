@@ -1,4 +1,8 @@
-#include <../sigil/sigil.h>
+#ifndef CARD_CARD_H_
+#define CARD_CARD_H_
+
+#include <variant>
+#include "../sigil/sigil.h"
 #include <vector>
 
 enum struct ActionType {
@@ -36,3 +40,4 @@ public:
 
     void action(ActionType actionType);
 };
+#endif // CARD_CARD_H_

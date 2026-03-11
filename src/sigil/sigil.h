@@ -1,3 +1,6 @@
+#ifndef SIGIL_SIGIL_H_
+#define SIGIL_SIGIL_H_
+
 #include <string>
 #include <functional>
 #include <array>
@@ -34,3 +37,4 @@ class SigilRegister {
         void registerSigil(const SigilName& name, Trigger trigger, std::function<void()> effect);
         void initializeSigils();
 };
+#endif // SIGIL_SIGIL_H_

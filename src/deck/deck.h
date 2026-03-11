@@ -1,3 +1,6 @@
+#ifndef DECK_DECK_H_
+#define DECK_DECK_H_
+
 #include "../card/card.h"
 #include "../card/bullfrog.h"
 
@@ -13,3 +16,4 @@ public:
         deck.emplace_back(cardType);  // Creates CardInstance with new ID
     }
 };
+#endif // DECK_DECK_H_

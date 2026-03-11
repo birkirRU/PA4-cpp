@@ -1,3 +1,6 @@
+#ifndef ENTITIES_PLAYER_H_
+#define ENTITIES_PLAYER_H_
+
 #include "entity.h"
 
 class Player: public Entity {
@@ -5,8 +8,9 @@ private:
     Deck squirrelDeck;
 
 public:
+    Player(int health);
     void drawCard();
     void drawSquirrel();
-    void playCard(Board& board);
     bool sacrifice(Board& board, int bloodCost);
 };
+#endif // ENTITIES_PLAYER_H_

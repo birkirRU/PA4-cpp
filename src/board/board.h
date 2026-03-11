@@ -1,9 +1,12 @@
+#ifndef BOARD_BOARD_H_
+#define BOARD_BOARD_H_
+
 #include <array>
 #include <iostream>
 #include "../entities/player.h"
 #include "../entities/enemy.h"
 #include "../entities/entity.h"
-#include "card.h"
+#include "../card/card.h"
 
 class Board {
 
@@ -25,3 +28,4 @@ class Board {
         void removeCard(entityType et, int cardId);
         void printBoard(); 
 };
+#endif // BOARD_BOARD_H_
