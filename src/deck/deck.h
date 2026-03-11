@@ -2,14 +2,15 @@
 #include "../card/bullfrog.h"
 
 #include <variant>
-#include <array>
+#include <vector>
 
 class Deck {
 private:
-    using anyCard = std::variant<
-                                std::monostate,
-                                Bullfrog
-                                >;
-    std::array<anyCard, 10> deck = {};
+    std::vector<CardInstance> deck;
+public:
+    template<typename CardType>
+    void addCard(const CardType& cardType) {
+        deck.emplace_back(cardType);  // Creates CardInstance with new ID
+    }
 };
 
