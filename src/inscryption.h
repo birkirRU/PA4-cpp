@@ -3,6 +3,7 @@
 #include "board/board.h"
 #include "entities/player.h"
 #include "entities/enemy.h"
+#include "system/battle_manager.h"
 
 class Game {
     public:
@@ -10,6 +11,7 @@ class Game {
         Enemy enemy;
         Board board;
         SigilRegister sigilRegister;
+        BattleManager battleManager;
 
         Game();
         void startGame();

@@ -2,14 +2,14 @@
 #include "../card/bullfrog.h"
 
 #include <variant>
-#include <array>
+#include <vector>
 
 class Deck {
 private:
     using anyCard = std::variant<
-                                std::monostate,
-                                Bullfrog
-                                >;
-    std::array<anyCard, 10> deck = {};
+                        std::monostate, Bullfrog 
+                        >;
+    std::vector<anyCard> deck = {};
+public:
+    void addCard(anyCard card);
 };
-
