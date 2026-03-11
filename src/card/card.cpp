@@ -16,8 +16,7 @@ void Card<DerivedCardType>::action(ActionType actionType) {
 }
 
 
-template<typename DerivedCardType>
-int Card<DerivedCardType>::_nextId() {
+int CardInstance::_nextId() {
     static int count = 1;
     return count++;
 }

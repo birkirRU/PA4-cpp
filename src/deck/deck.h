@@ -6,10 +6,10 @@
 
 class Deck {
 private:
-    using anyCard = std::variant<
-                        std::monostate, Bullfrog 
-                        >;
-    std::vector<anyCard> deck = {};
+    std::vector<CardInstance> deck;
 public:
-    void addCard(anyCard card);
+    template<typename CardType>
+    void addCard(const CardType& cardType) {
+        deck.emplace_back(cardType);  // Creates CardInstance with new ID
+    }
 };
