@@ -1,6 +1,5 @@
 #include "inscryption.h"
 
-Game::Game() {
-
-
+void Game::startGame() {
+    battleManager.battle();
 }

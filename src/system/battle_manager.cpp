@@ -1,11 +1,9 @@
 #include "battle_manager.h"
 
 
-BattleManager::BattleManager(const Player& player, const Enemy& enemy) : currentplayer(player), currentenemy(enemy) {}
-
 void BattleManager::battle() {
     initBattle();
-    while (true) {
+    while (!player.isDead() && !enemy.isDead()) {
         
         initializeTurn();
         playTurn();
@@ -14,8 +12,8 @@ void BattleManager::battle() {
 }
 
 void BattleManager::initBattle() {
+    board.initializeBoard();
     player.shuffleDeck();
     enemy.shuffleDeck();
-
     player.drawStartingHand();
 }

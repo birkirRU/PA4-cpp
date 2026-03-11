@@ -1,5 +1,12 @@
 #include "board.h"
 
+void Board::initializeBoard() {
+    for (int i = 0; i < 3; i++) {
+        enemyActiveCards[i] = -1;
+        enemyPreCards[i] = -1;
+        playerActiveCards[i] = -1;
+    }
+}
 
 void Board::placeCard(entityType et, const int& cardId, const int& pos) {
     if (et == entityType::PLAYER) {

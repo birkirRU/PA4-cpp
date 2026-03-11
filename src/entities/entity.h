@@ -18,7 +18,7 @@ class Entity {
         static int _nextId();
     protected:
         std::vector<int> hand;
-        Deck deck;
+        Deck deckObj;
 
     public:
         int health;
@@ -31,5 +31,6 @@ class Entity {
 
         virtual void shuffleDeck();
         virtual void drawStartingHand();
+        virtual bool isDead() const; 
 };
 #endif // ENTITIES_ENTITY_H_

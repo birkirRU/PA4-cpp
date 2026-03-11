@@ -16,7 +16,13 @@ class Game {
         SigilRegister sigilRegister;
         BattleManager battleManager;
 
-        Game();
+        Game() 
+            : player(5),
+              enemy(5),
+              board(),
+              sigilRegister(),
+              battleManager(player, enemy, board) {}
+              
         void startGame();
         void endGame();
 };

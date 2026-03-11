@@ -3,6 +3,6 @@
 Enemy::Enemy(int health) : Entity(health) {
 
     // Initialize
-    deck.addCard(Bullfrog());
+    deckObj.addCard(Bullfrog());
     // ...
 }

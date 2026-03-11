@@ -5,6 +5,6 @@
 
 class Enemy : public Entity {
 public:
-    Enemy(int health);
+    Enemy(int health) ;
 };
 #endif // ENTITIES_ENEMY_H_
