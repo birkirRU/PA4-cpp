@@ -20,6 +20,7 @@ void BattleManager::initBattle() {
     player.shuffleDeck();
     enemy.shuffleDeck();
     player.drawStartingHand();
+    enemy.drawStartingHand();
 }
 
 void BattleManager::initializeTurn() {
@@ -47,6 +48,18 @@ void BattleManager::initializeTurn() {
 }
 
 void BattleManager::playTurn() {
+    enemy.drawCard();
+    if (!enemy.hand.empty()) {
+        for (int s = 0; s < 3; ++s) {
+            if (!board.enemyActiveCards[s]) {
+                Card* c = enemy.hand[0];
+                board.placeCard(entityType::ENEMY, c, s);
+                enemy.hand.erase(enemy.hand.begin());
+                std::cout << "Enemy placed " << c->name << " in slot " << s << "." << std::endl;
+                break;
+            }
+        }
+    }
     board.resolveCombat(entityType::PLAYER);
     board.resolveCombat(entityType::ENEMY);
     board.onTurnEnd();

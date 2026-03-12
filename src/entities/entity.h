@@ -29,6 +29,7 @@ class Entity {
 
         virtual void shuffleDeck();
         virtual void drawStartingHand();
+        virtual void drawCard();
         virtual bool isDead() const; 
 };
 #endif // ENTITIES_ENTITY_H_
