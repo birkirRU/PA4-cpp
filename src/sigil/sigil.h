@@ -40,8 +40,8 @@ public:
     virtual void onBlock(CombatContext&) {}
     virtual void onTurnEnd(CombatContext&) {}
 
-    virtual bool canBeBlockedBy(const Card* blocker) const { return true; }
-    virtual bool canBlock(const Card* attacker) const { return true; }
+    virtual bool canBeBlockedBy(const Card* /* blocker */) const { return true; }
+    virtual bool canBlock(const Card* /* attacker */) const { return true; }
 };
 
 class AirborneSigil : public Sigil {

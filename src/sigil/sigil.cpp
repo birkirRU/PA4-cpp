@@ -24,7 +24,7 @@ bool MightyLeapSigil::canBlock(const Card* attacker) const {
 
 WaterborneSigil::WaterborneSigil() : turnCounter(0) {}
 
-bool WaterborneSigil::canBeBlockedBy(const Card* blocker) const {
+bool WaterborneSigil::canBeBlockedBy(const Card* /* blocker */) const {
     return (turnCounter % 2 == 1);
 }
 

@@ -68,8 +68,7 @@ void Board::placeCard(entityType et, Card* card, int pos) {
 void Board::removeCard(entityType et, Card* card) {
     if (!card) return;
 
-    std::array<Card*, 3>* listToCheck;
-
+    std::array<Card*, 3>* listToCheck = nullptr;
     if (et == entityType::PLAYER) {
         listToCheck = &playerActiveCards;
     } else if (et == entityType::ENEMY) {
@@ -77,6 +76,7 @@ void Board::removeCard(entityType et, Card* card) {
     } else if (et == entityType::ENEMY_PRE_PLACE) {
         listToCheck = &enemyPreCards;
     }
+    if (!listToCheck) return;
 
     for (auto& c : *listToCheck) {
         if (c == card) {
