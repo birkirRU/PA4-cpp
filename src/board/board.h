@@ -26,5 +26,6 @@ class Board {
         void placeCard(entityType et, const CardInstance& card, const int& pos);
         void removeCard(entityType et, int cardId);
         void printBoard(const std::array<CardInstance, 3>& board); 
+        void printHand(const std::vector<CardInstance>& hand);
 };
 #endif // BOARD_BOARD_H_

@@ -36,6 +36,11 @@ void BattleManager::initializeTurn() {
     if (temp == "yes") {
         player.drawSquirrel();
     }
+
+     std::cout << "Here is your hand: ";
+     board.printHand(player.hand);
+
+
 }
 
 void BattleManager::playTurn() {

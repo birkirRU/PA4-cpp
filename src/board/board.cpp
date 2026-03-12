@@ -42,3 +42,17 @@ void Board::printBoard(const std::array<CardInstance, 3>& board) {
     }
     std::cout << std::endl;
 }
+
+void Board::printHand(const std::vector<CardInstance>& hand) {
+    for (const auto& i : hand) {
+        std::visit([](const auto& a) {
+            using T = std::decay_t<decltype(a)>;
+            if constexpr (std::is_same_v<T, std::monostate>) {
+                std::cout << "[empty] ";
+            } else {
+                std::cout << "[" << a.name << "] ";
+            }
+        }, i.card);
+    }
+    std::cout << std::endl;
+}

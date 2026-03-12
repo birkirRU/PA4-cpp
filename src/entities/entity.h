@@ -16,7 +16,7 @@ enum struct entityType {
 class Entity {
     private:
         static int _nextId();
-    protected:
+    public:
         std::vector<CardInstance> hand;
         Deck deckObj;
 
