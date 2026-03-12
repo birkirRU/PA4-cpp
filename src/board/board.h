@@ -3,29 +3,43 @@
 
 #include <array>
 #include <iostream>
-#include "../entities/player.h"
-#include "../entities/enemy.h"
+#include <memory>
+#include <vector>
 #include "../entities/entity.h"
-#include "../card/card.h"
+#include "../sigil/sigil.h"
+
+class Card;
+class Player;
+class Enemy;
+class Deck;
 
 class Board {
+public:
+    std::array<Card*, 3> enemyActiveCards;
+    std::array<Card*, 3> enemyPreCards;
+    std::array<Card*, 3> playerActiveCards;
 
-    public:
+    Player* player;
+    Enemy* enemy;
+    Deck* playerDeck;
+    Deck* enemyDeck;
+    int currentTurn;
 
-        // Board looks like 
-        // [] [] [] <- next card that enemy is going to play
-        // [] [] [] <- active enemy cards
-        // [] [] [] <- your active cards
-        
-    std::array<CardInstance, 3> enemyActiveCards;
-    std::array<CardInstance, 3> enemyPreCards;
-    std::array<CardInstance, 3> playerActiveCards;
-        
+    Board();
 
-    public:
-        void placeCard(entityType et, const CardInstance& card, const int& pos);
-        void removeCard(entityType et, int cardId);
-        void printBoard(const std::array<CardInstance, 3>& board); 
-        void printHand(const std::vector<CardInstance>& hand);
+    void placeCard(entityType et, Card* card, int pos);
+    void removeCard(entityType et, Card* card);
+    void printBoard(const std::array<Card*, 3>& board);
+    void printHand(const std::vector<Card*>& hand);
+
+    void resolveCombat(entityType attackingSide);
+    CombatContext resolveTargeting(Card* attacker, int lane, bool attackerIsPlayer);
+    void resolveAttack(CombatContext& ctx);
+
+    void onTurnEnd();
+
+    Card* getCardAt(entityType et, int lane);
+    void damagePlayer(int damage, bool toEnemy);
 };
+
 #endif // BOARD_BOARD_H_

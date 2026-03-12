@@ -1,16 +1,6 @@
 #include "card.h"
 
-
-template<typename DerivedCardType>
-void Card<DerivedCardType>::action(ActionType actionType) {
-    switch (actionType) {
-        case ActionType::BLOCK:
-            static_cast<DerivedCardType*>(this)->block();
-            break;
-        case ActionType::ATTACK:
-            static_cast<DerivedCardType*>(this)->attack();
-            break;
-        default:
-            break;
-    }
-}
+Card::Card(const std::string& name, int health, int damage, int bloodCost,
+           const std::vector<SigilName>& sigils, bool isBase)
+    : name(name), health(health), damage(damage), bloodCost(bloodCost),
+      sigils(sigils), isBase(isBase) {}

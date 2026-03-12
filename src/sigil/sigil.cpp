@@ -1,49 +1,66 @@
 #include "sigil.h"
+#include "../card/card.h"
+#include "../board/board.h"
 
-
-SigilDef* SigilRegister::getMap() {
-    return sigilmap.data();
+bool AirborneSigil::canBeBlockedBy(const Card* blocker) const {
+    if (!blocker) return true;
+    for (SigilName s : blocker->sigils) {
+        if (s == SigilName::MIGHTY_LEAP) {
+            return true;
+        }
+    }
+    return false;
 }
 
-void SigilRegister::addToMap(const SigilDef sigil) {
-    getMap()[static_cast<size_t>(sigil.name)] = sigil;
+bool MightyLeapSigil::canBlock(const Card* attacker) const {
+    if (!attacker) return true;
+    for (SigilName s : attacker->sigils) {
+        if (s == SigilName::AIRBORNE) {
+            return true;
+        }
+    }
+    return true;
 }
 
-void SigilRegister::registerSigil(const SigilName& name, Trigger trigger, std::function<void()> effect) {
-    SigilDef sigil;
-    sigil.name = name;
-    sigil.trigger = trigger;
-    sigil.effect = effect;
-    SigilRegister::addToMap(sigil);
+WaterborneSigil::WaterborneSigil() : turnCounter(0) {}
+
+bool WaterborneSigil::canBeBlockedBy(const Card* blocker) const {
+    return (turnCounter % 2 == 1);
 }
 
+void WaterborneSigil::onTurnEnd(CombatContext&) {
+    turnCounter++;
+}
 
-void SigilRegister::initializeSigils() {
-    registerSigil(
-        SigilName::WATERBORNE,
-        Trigger::onPASSIVE,
-        []() {
-        }
-    );
+void FledglingSigil::onTurnEnd(CombatContext& ctx) {
+    if (!ctx.attacker) return;
 
-    registerSigil(
-        SigilName::MIGHTY_LEAP,
-        Trigger::onBLOCK,
-        []() {
-        }
-    );
+    if (ctx.attacker->isBase) {
+        ctx.attacker->damage += 2;
+        ctx.attacker->health += 1;
+        ctx.attacker->sigils = {SigilName::MIGHTY_LEAP};
+    } else {
+        ctx.attacker->damage += 1;
+        ctx.attacker->health += 2;
+    }
+}
 
-    registerSigil(
-        SigilName::FLEDGING,
-        Trigger::onPASSIVE,
-        []() {
-        }
-    );
+SigilRegister::SigilRegister() {
+    sigils[static_cast<size_t>(SigilName::AIRBORNE)] = std::make_unique<AirborneSigil>();
+    sigils[static_cast<size_t>(SigilName::MIGHTY_LEAP)] = std::make_unique<MightyLeapSigil>();
+    sigils[static_cast<size_t>(SigilName::WATERBORNE)] = std::make_unique<WaterborneSigil>();
+    sigils[static_cast<size_t>(SigilName::FLEDGING)] = std::make_unique<FledglingSigil>();
+}
 
-    registerSigil(
-        SigilName::AIRBORNE,
-        Trigger::onATTACK,
-        []() {
-        }
-    );
+SigilRegister& SigilRegister::instance() {
+    static SigilRegister instance;
+    return instance;
+}
+
+Sigil* SigilRegister::getSigil(SigilName name) const {
+    size_t idx = static_cast<size_t>(name);
+    if (idx < sigils.size()) {
+        return sigils[idx].get();
+    }
+    return nullptr;
 }

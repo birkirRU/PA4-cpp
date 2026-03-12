@@ -2,25 +2,34 @@
 #define DECK_DECK_H_
 
 #include "../card/card.h"
-#include "../card/cardinstance.h"
-#include "../card/bullfrog.h"
 
-#include <variant>
 #include <vector>
+#include <memory>
 #include <random>
 #include <algorithm>
 
-
 class Deck {
 private:
-    std::vector<CardInstance> deck;
-    int top = 0; // Index of the top card in the deck
+    std::vector<std::unique_ptr<Card>> cards;
+    std::vector<Card*> drawPile;
+    std::vector<Card*> hand;
+    std::vector<Card*> discardPile;
+
 public:
     template<typename CardType>
-    void addCard(const CardType& cardType) {
-        deck.emplace_back(cardType);  // Creates CardInstance with new ID
-    }
+    void addCard() {
+        auto ptr = std::make_unique<CardType>();
+        drawPile.push_back(ptr.get());
+        cards.push_back(std::move(ptr));
+}
+
+    Card* drawCard();
+    void discardCard(Card* card);
     void shuffle();
-    CardInstance drawCard();
+    void shuffleDrawPile();
+
+    std::vector<Card*>& getHand() { return hand; }
+    const std::vector<Card*>& getHand() const { return hand; }
 };
+
 #endif // DECK_DECK_H_

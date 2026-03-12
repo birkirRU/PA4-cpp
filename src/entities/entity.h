@@ -5,6 +5,7 @@
 #include "../deck/deck.h"
 
 class Board;
+class Card;
 
 enum struct entityType {
     PLAYER,
@@ -17,7 +18,7 @@ class Entity {
     private:
         static int _nextId();
     public:
-        std::vector<CardInstance> hand;
+        std::vector<Card*> hand;
         Deck deckObj;
 
     public:

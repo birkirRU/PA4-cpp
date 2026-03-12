@@ -13,14 +13,12 @@ class Game {
         Player player;
         Enemy enemy;
         Board board;
-        SigilRegister sigilRegister;
         BattleManager battleManager;
 
         Game() 
             : player(5),
               enemy(5),
               board(),
-              sigilRegister(),
               battleManager(player, enemy, board) {}
               
         void startGame();

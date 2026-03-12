@@ -2,39 +2,82 @@
 #define SIGIL_SIGIL_H_
 
 #include <string>
-#include <functional>
+#include <memory>
+#include <vector>
 #include <array>
 
-enum struct Trigger {
-    onATTACK,
-    onBLOCK,
-    onPASSIVE,
-    onTURNEND
-};
-
-enum struct SigilName {
+enum class SigilName {
     WATERBORNE,
     MIGHTY_LEAP,
     FLEDGING,
-    AIRBORNE
+    AIRBORNE,
+    WOLF,
+    RAVEN,
+    BULLFROG,
+    GREAT_WHITE,
+    SQUIRREL,
+    WOLF_CUP
 };
 
+class Card;
+class Board;
+class Deck;
 
-struct SigilDef {
-    SigilName name;
-    Trigger trigger;
-    std::function<void()> effect;
+struct CombatContext {
+    Card* attacker;
+    std::vector<Card*> blockers;
+    Board* board;
+    Deck* deck;
+    int attackerLane;
+    bool attackerIsPlayer;
+};
+
+class Sigil {
+public:
+    virtual ~Sigil() = default;
+
+    virtual void onAttack(CombatContext&) {}
+    virtual void onBlock(CombatContext&) {}
+    virtual void onTurnEnd(CombatContext&) {}
+
+    virtual bool canBeBlockedBy(const Card* blocker) const { return true; }
+    virtual bool canBlock(const Card* attacker) const { return true; }
+};
+
+class AirborneSigil : public Sigil {
+public:
+    bool canBeBlockedBy(const Card* blocker) const override;
+};
+
+class MightyLeapSigil : public Sigil {
+public:
+    bool canBlock(const Card* attacker) const override;
+};
+
+class WaterborneSigil : public Sigil {
+public:
+    WaterborneSigil();
+    bool canBeBlockedBy(const Card* blocker) const override;
+    void onTurnEnd(CombatContext&) override;
+
+private:
+    int turnCounter;
+};
+
+class FledglingSigil : public Sigil {
+public:
+    void onTurnEnd(CombatContext&) override;
 };
 
 class SigilRegister {
-    private:
-        // SigilName is the key
-        std::array<SigilDef, 5> sigilmap = {};
-        SigilDef* getMap();
+public:
+    SigilRegister();
+    static SigilRegister& instance();
 
-    public:
-        void addToMap(const SigilDef sigil);
-        void registerSigil(const SigilName& name, Trigger trigger, std::function<void()> effect);
-        void initializeSigils();
+    Sigil* getSigil(SigilName name) const;
+
+private:
+    std::array<std::unique_ptr<Sigil>, 4> sigils;
 };
+
 #endif // SIGIL_SIGIL_H_
