@@ -9,6 +9,11 @@ void BattleManager::battle() {
         playTurn();
     }
 
+    if (player.isDead()) {
+        std::cout << "Enemy wins!" << std::endl;
+    } else {
+        std::cout << "You win!" << std::endl;
+    }
 }
 
 void BattleManager::initBattle() {
@@ -42,8 +47,7 @@ void BattleManager::initializeTurn() {
 }
 
 void BattleManager::playTurn() {
-    player.shuffleDeck();
-    enemy.shuffleDeck();
-    player.drawStartingHand();
+    board.resolveCombat(entityType::PLAYER);
+    board.resolveCombat(entityType::ENEMY);
+    board.onTurnEnd();
 }
-

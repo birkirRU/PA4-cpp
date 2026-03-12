@@ -133,13 +133,16 @@ Card* Board::getCardAt(entityType et, int lane) {
 }
 
 void Board::damagePlayer(int damage, bool toEnemy) {
+    if (damage <= 0) return;
     if (toEnemy) {
         if (enemy) {
             enemy->health -= damage;
+            if (player) player->health += damage;
         }
     } else {
         if (player) {
             player->health -= damage;
+            if (enemy) enemy->health += damage;
         }
     }
 }
