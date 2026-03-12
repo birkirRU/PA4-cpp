@@ -26,7 +26,6 @@ public:
     Card* drawCard();
     void discardCard(Card* card);
     void shuffle();
-    void shuffleDrawPile();
 
     std::vector<Card*>& getHand() { return hand; }
     const std::vector<Card*>& getHand() const { return hand; }

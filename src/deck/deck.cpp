@@ -22,11 +22,8 @@ void Deck::discardCard(Card* card) {
 }
 
 void Deck::shuffle() {
-    shuffleDrawPile();
-}
-
-void Deck::shuffleDrawPile() {
     std::random_device rd;
     std::mt19937 g(rd());
     std::shuffle(drawPile.begin(), drawPile.end(), g);
 }
+
