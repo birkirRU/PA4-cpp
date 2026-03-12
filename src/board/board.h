@@ -31,6 +31,7 @@ public:
     void removeCard(entityType et, Card* card);
     void printBoard(const std::array<Card*, 3>& board);
     void printHand(const std::vector<Card*>& hand);
+    void printFullBoard();
 
     void resolveCombat(entityType attackingSide);
     CombatContext resolveTargeting(Card* attacker, int lane, bool attackerIsPlayer);

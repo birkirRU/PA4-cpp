@@ -32,7 +32,6 @@ static std::string formatSigils(const std::vector<SigilName>& sigils) {
 
 static std::string formatCard(const Card* c) {
     if (!c) return "[empty]";
-
     // Format: [Wolf 3/2 C:2 S:ML] <- Format now, we can change this later if we have sth thatrs better
     std::string s = "[";
     s += c->name;
@@ -94,25 +93,32 @@ void Board::removeCard(entityType et, Card* card) {
 }
 
 void Board::printBoard(const std::array<Card*, 3>& board) {
-    for (const auto& i : board) {
-        if (!i) {
-            std::cout << "[empty] ";
-        } else {
-            std::cout << "[" << i->name << "] ";
-        }
+    for (const auto& c : board) {
+        std::cout << formatCard(c) << " ";
     }
     std::cout << std::endl;
 }
 
 void Board::printHand(const std::vector<Card*>& hand) {
-    for (const auto& i : hand) {
-        if (!i) {
-            std::cout << "[empty] ";
-        } else {
-            std::cout << "[" << i->name << "] ";
-        }
+    for (size_t i = 0; i < hand.size(); ++i) {
+        std::cout << (i + 1) << ") " << formatCard(hand[i]) << " ";
     }
     std::cout << std::endl;
+}
+
+void Board::printFullBoard() {
+    if (enemy) {
+        std::cout << "Enemy HP: " << enemy->health << std::endl;
+    }
+    std::cout << "Enemy Row:  ";
+    printBoard(enemyActiveCards);
+    std::cout << "Enemy Pre:  ";
+    printBoard(enemyPreCards);
+    std::cout << "Player Row: ";
+    printBoard(playerActiveCards);
+    if (player) {
+        std::cout << "Player HP: " << player->health << std::endl;
+    }
 }
 
 Card* Board::getCardAt(entityType et, int lane) {
