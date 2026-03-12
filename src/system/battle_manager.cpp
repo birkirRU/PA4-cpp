@@ -19,9 +19,7 @@ void BattleManager::initBattle() {
 
 void BattleManager::initializeTurn() {
 
-    board.printBoard(board.enemyActiveCards);
-    board.printBoard(board.enemyPreCards);
-    board.printBoard(board.playerActiveCards);
+    board.printFullBoard();
 
     std::string temp;
     std::cout << "Do you want to draw a card?: (yes/no) ";

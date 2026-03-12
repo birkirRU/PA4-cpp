@@ -15,11 +15,16 @@ class Game {
         Board board;
         BattleManager battleManager;
 
-        Game() 
+        Game()
             : player(5),
               enemy(5),
               board(),
-              battleManager(player, enemy, board) {}
+              battleManager(player, enemy, board) {
+            board.player = &player;
+            board.enemy = &enemy;
+            board.playerDeck = &player.deckObj;
+            board.enemyDeck = &enemy.deckObj;
+        }
               
         void startGame();
         void endGame();
