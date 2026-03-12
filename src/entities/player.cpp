@@ -35,3 +35,33 @@ void Player::playCard(Board& board) {
     hand.erase(hand.begin() + (idx - 1));
     std::cout << "Placed " << chosen->name << " in lane " << lane << "." << std::endl;
 }
+
+bool Player::sacrifice(Board& board, int bloodCost) {
+    if (bloodCost <= 0) return true;
+
+    int onBoard = 0;
+    for (int s = 0; s < 3; ++s) {
+        if (board.getCardAt(entityType::PLAYER, s)) ++onBoard;
+    }
+    if (onBoard < bloodCost) {
+        std::cout << "You need " << bloodCost << " blood but only have " << onBoard
+                << " card(s) on your row. Place more cards first." << std::endl;
+        return false;
+    }
+
+    std::cout << "You need " << bloodCost << " blood. Sacrifice " << bloodCost
+            << " card(s) from your row. Enter " << bloodCost << " slot(s) (0, 1, or 2), e.g. 0 1: ";
+
+    std::vector<int> slots;
+    for (int i = 0; i < bloodCost; ++i) {
+        int slot;
+        std::cin >> slot;
+        slots.push_back(slot);
+    }
+
+    for (int s : slots) {
+        Card* card = board.getCardAt(entityType::PLAYER, s);
+        if (card) board.removeCard(entityType::PLAYER, card);
+    }
+    return true;
+}
