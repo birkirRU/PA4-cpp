@@ -40,10 +40,10 @@ void BattleManager::initializeTurn() {
         player.drawSquirrel();
     }
 
-     std::cout << "Here is your hand: ";
-     board.printHand(player.hand);
+    std::cout << "Here is your hand: ";
+    board.printHand(player.hand);
 
-
+    player.playCard(board);
 }
 
 void BattleManager::playTurn() {

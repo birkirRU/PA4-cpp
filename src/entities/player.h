@@ -13,6 +13,7 @@ public:
     Player(int health);
     void drawCard();
     void drawSquirrel();
+    void playCard(Board& board);
     bool sacrifice(Board& board, int bloodCost);
 };
 #endif // ENTITIES_PLAYER_H_
