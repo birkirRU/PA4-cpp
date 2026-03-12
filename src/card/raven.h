@@ -5,6 +5,7 @@
 
 class Raven : public Card<Raven> {
 public:
+    std::string name = "Raven";
     Raven(): Card<Raven>(3,1,1, {SigilName::MIGHTY_LEAP}) {};
     void block();
     void attack();

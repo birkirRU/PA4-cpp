@@ -21,6 +21,6 @@ public:
         deck.emplace_back(cardType);  // Creates CardInstance with new ID
     }
     void shuffle();
-    int drawCard();
+    CardInstance drawCard();
 };
 #endif // DECK_DECK_H_

@@ -5,6 +5,7 @@
 
 class Squirrel : public Card<Squirrel> {
 public:
+    std::string name = "Squirrel";
     Squirrel(): Card<Squirrel>(3,1,1, {SigilName::MIGHTY_LEAP}) {};
     void block();
     void attack();

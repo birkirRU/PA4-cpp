@@ -1,15 +1,10 @@
 #include <iostream>
-#include "inscryption.cpp"
+#include "inscryption.h"
 
 
 int main() {
 
     Game myGame;
     myGame.startGame();
-
-    std::cout << "Hello, World!" << std::endl;
-
-
-
     return 0;
 }

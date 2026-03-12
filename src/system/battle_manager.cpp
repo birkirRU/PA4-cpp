@@ -8,7 +8,7 @@ void BattleManager::battle() {
         initializeTurn();
         playTurn();
     }
-    endBattle();
+
 }
 
 void BattleManager::initBattle() {
@@ -18,15 +18,19 @@ void BattleManager::initBattle() {
 }
 
 void BattleManager::initializeTurn() {
-    board.printBoard();
+
+    board.printBoard(board.enemyActiveCards);
+    board.printBoard(board.enemyPreCards);
+    board.printBoard(board.playerActiveCards);
+
     std::string temp;
-    std::cout << "Do you want to draw a card?: (yes/no) "
+    std::cout << "Do you want to draw a card?: (yes/no) ";
     std::cin >> temp;
 
     if (temp == "yes") {
         player.drawCard();
     }
-    std::cout << "Do you want to draw a squirrel?: (yes/no) "
+    std::cout << "Do you want to draw a squirrel?: (yes/no) ";
     std::cin >> temp;
 
     if (temp == "yes") {

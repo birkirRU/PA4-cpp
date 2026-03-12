@@ -14,9 +14,3 @@ void Card<DerivedCardType>::action(ActionType actionType) {
             break;
     }
 }
-
-
-int CardInstance::_nextId() {
-    static int count = 1;
-    return count++;
-}

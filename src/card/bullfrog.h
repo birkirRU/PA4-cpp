@@ -5,6 +5,7 @@
 
 class Bullfrog : public Card<Bullfrog> {
 public:
+    std::string name = "Bullfrog";
     Bullfrog(): Card (3,1,1, {SigilName::MIGHTY_LEAP}) {};
     void block();
     void attack();

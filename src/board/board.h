@@ -10,21 +10,21 @@
 
 class Board {
 
-    private:
+    public:
 
         // Board looks like 
         // [] [] [] <- next card that enemy is going to play
         // [] [] [] <- active enemy cards
         // [] [] [] <- your active cards
         
-        std::array<int, 3> enemyActiveCards{{-1, -1, -1}};
-        std::array<int, 3> enemyPreCards{{-1, -1, -1}};
-        std::array<int, 3> playerActiveCards{{-1, -1, -1}};
+    std::array<CardInstance, 3> enemyActiveCards;
+    std::array<CardInstance, 3> enemyPreCards;
+    std::array<CardInstance, 3> playerActiveCards;
         
 
     public:
-        void placeCard(entityType et, const int& cardId, const int& pos);
+        void placeCard(entityType et, const CardInstance& card, const int& pos);
         void removeCard(entityType et, int cardId);
-        void printBoard(); 
+        void printBoard(const std::array<CardInstance, 3>& board); 
 };
 #endif // BOARD_BOARD_H_

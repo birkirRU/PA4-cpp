@@ -17,7 +17,7 @@ class Entity {
     private:
         static int _nextId();
     protected:
-        std::vector<int> hand;
+        std::vector<CardInstance> hand;
         Deck deckObj;
 
     public:
@@ -25,9 +25,6 @@ class Entity {
         int id;
 
         Entity(int health): health(health), id(_nextId()) {};
-        virtual void playCard(Board& board);
-        virtual void attack();
-        virtual void block();
 
         virtual void shuffleDeck();
         virtual void drawStartingHand();

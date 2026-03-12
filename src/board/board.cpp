@@ -1,25 +1,18 @@
 #include "board.h"
 
-void Board::initializeBoard() {
-    for (int i = 0; i < 3; i++) {
-        enemyActiveCards[i] = -1;
-        enemyPreCards[i] = -1;
-        playerActiveCards[i] = -1;
-    }
-}
 
-void Board::placeCard(entityType et, const int& cardId, const int& pos) {
+void Board::placeCard(entityType et, const CardInstance& card, const int& pos) {
     if (et == entityType::PLAYER) {
-        playerActiveCards[pos] = cardId;
+        playerActiveCards[pos] = card;
     } else if (et == entityType::ENEMY) {
-        enemyActiveCards[pos] = cardId;
+        enemyActiveCards[pos] = card;
     } else if (et == entityType::ENEMY_PRE_PLACE) {
-        enemyPreCards[pos] = cardId;
+        enemyPreCards[pos] = card;
     }
 };
 
 void Board::removeCard(entityType et, int cardId) {
-    std::array<int, 3> listToCheck;
+    std::array<CardInstance, 3> listToCheck;
 
     if (et == entityType::PLAYER) {
         listToCheck = playerActiveCards;
@@ -28,19 +21,24 @@ void Board::removeCard(entityType et, int cardId) {
     } else if (et == entityType::ENEMY_PRE_PLACE) {
         listToCheck = enemyPreCards; 
     }
-    for (int& cid : listToCheck) {
-        if (cid == cardId) {
-            cid = -1;
+    for (CardInstance& c : listToCheck) {
+        if (c.id == cardId) {
+            c = CardInstance();
             break;
         }
     }
 }
 
-void Board::printBoard() {
-    std::cout << "Enemy next: ";
-    std::cout << "[" << enemyPreCards[0] << "] " << "[" << enemyPreCards[1] << "] " << "[" << enemyPreCards[2] << "] " << std::endl;
-    std::cout << "Enemy Current: ";
-    std::cout << "[" << enemyActiveCards[0] << "] " << "[" << enemyActiveCards[1] << "] " << "[" << enemyActiveCards[2] << "] " << std::endl;
-    std::cout << "Player: ";
-    std::cout << "[" << playerActiveCards[0] << "] " << "[" << playerActiveCards[1] << "] " << "[" << playerActiveCards[2] << "] " << std::endl;
-};
+void Board::printBoard(const std::array<CardInstance, 3>& board) {
+    for (const auto& i : board) {
+        std::visit([](const auto& a) {
+            using T = std::decay_t<decltype(a)>;
+            if constexpr (std::is_same_v<T, std::monostate>) {
+                std::cout << "[empty] ";
+            } else {
+                std::cout << "[" << a.name << "] ";
+            }
+        }, i.card);
+    }
+    std::cout << std::endl;
+}

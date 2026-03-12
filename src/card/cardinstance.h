@@ -7,13 +7,13 @@
 #include "raven.h"
 #include "squirrel.h"
 #include "wolf.h"
-#include "wolf_cub.h"
+#include "wolf_cup.h"
 
 
 struct CardInstance {
 
-    const int id;
-    std::variant<std::monostate, Bullfrog, Wolf, Raven> card;
+    int id;
+    std::variant<std::monostate, Bullfrog, Wolf, Raven, GreatWhite, Squirrel, WolfCup> card;
 
     CardInstance() : id(-1), card(std::monostate{}) {}
 

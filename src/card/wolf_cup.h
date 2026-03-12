@@ -5,6 +5,7 @@
 
 class WolfCup : public Card<WolfCup> {
 public:
+    std::string name = "WolfCup";
     WolfCup(): Card<WolfCup>(3,1,1, {SigilName::MIGHTY_LEAP}) {};
     void block();
     void attack();

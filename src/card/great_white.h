@@ -5,6 +5,7 @@
 
 class GreatWhite : public Card<GreatWhite> {
 public:
+    std::string name = "GreatWhite";
     GreatWhite(): Card<GreatWhite>(3,1,1, {SigilName::MIGHTY_LEAP}) {};
     void block();
     void attack();

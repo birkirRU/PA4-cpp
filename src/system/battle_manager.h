@@ -12,7 +12,6 @@ class BattleManager {
         Board& board;
 
         void initBattle();
-        void endBattle();
         void initializeTurn();
         void playTurn(); 
         

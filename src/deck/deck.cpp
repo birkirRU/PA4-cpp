@@ -5,6 +5,6 @@ void Deck::shuffle() {
     std::mt19937 g(rd());
     std::shuffle(deck.begin(), deck.end(), g);
 }
-int Deck::drawCard() {
-    return deck[top++].id;  // Return the ID of the drawn card and move top index
+CardInstance Deck::drawCard() {
+    return deck[top++];  // Return the ID of the drawn card and move top index
 }

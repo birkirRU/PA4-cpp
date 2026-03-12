@@ -6,5 +6,5 @@ Enemy::Enemy(int health) : Entity(health) {
     deckObj.addCard(Wolf());
     deckObj.addCard(Raven());
     deckObj.addCard(GreatWhite());
-    deckObj.addCard(WolfCub());
+    deckObj.addCard(WolfCup());
 }
