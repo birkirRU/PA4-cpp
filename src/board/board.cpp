@@ -110,10 +110,10 @@ void Board::printFullBoard() {
     if (enemy) {
         std::cout << "Enemy HP: " << enemy->health << std::endl;
     }
-    std::cout << "Enemy Row:  ";
-    printBoard(enemyActiveCards);
     std::cout << "Enemy Pre:  ";
     printBoard(enemyPreCards);
+    std::cout << "Enemy Row:  ";
+    printBoard(enemyActiveCards);
     std::cout << "Player Row: ";
     printBoard(playerActiveCards);
     if (player) {
