@@ -4,6 +4,50 @@
 #include "../sigil/sigil.h"
 #include "../deck/deck.h"
 
+static std::string sigilToShort(SigilName s) {
+    switch (s) {
+        case SigilName::AIRBORNE:    
+            return "AB";
+        case SigilName::MIGHTY_LEAP: 
+            return "ML";
+        case SigilName::WATERBORNE:  
+            return "WB";
+        case SigilName::FLEDGING:    
+            return "FL";
+        default:                     
+            return "-";
+    }
+}
+
+static std::string formatSigils(const std::vector<SigilName>& sigils) {
+    if (sigils.empty()) return "-";
+
+    std::string result;
+    for (size_t i = 0; i < sigils.size(); ++i) {
+        if (i > 0) result += ",";
+        result += sigilToShort(sigils[i]);
+    }
+    return result;
+}
+
+static std::string formatCard(const Card* c) {
+    if (!c) return "[empty]";
+
+    // Format: [Wolf 3/2 C:2 S:ML] <- Format now, we can change this later if we have sth thatrs better
+    std::string s = "[";
+    s += c->name;
+    s += " ";
+    s += std::to_string(c->health);
+    s += "/";
+    s += std::to_string(c->damage);
+    s += " C:";
+    s += std::to_string(c->bloodCost);
+    s += " S:";
+    s += formatSigils(c->sigils);
+    s += "]";
+    return s;
+}
+
 Board::Board() : player(nullptr), enemy(nullptr), playerDeck(nullptr), enemyDeck(nullptr), currentTurn(0) {
     playerActiveCards = {nullptr, nullptr, nullptr};
     enemyActiveCards = {nullptr, nullptr, nullptr};
