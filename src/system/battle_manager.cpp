@@ -25,7 +25,10 @@ void BattleManager::initBattle() {
 
 void BattleManager::initializeTurn() {
 
+    board.moveEnemyPreCardsToActive();
+    enemy.randomPreRow(board.enemyPreCards);
     board.printFullBoard();
+
 
     // need to find a way to only force draw single squirrel when its you first turn.
     // Player always starts with single squirrel in hand, and 3 random drawn cards
@@ -50,23 +53,7 @@ void BattleManager::initializeTurn() {
 }
 
 void BattleManager::playTurn() {
-    // This needs to be changed. 
-    // The enemy should place cards to PreEnemy row only at end of players turn
-    // all cards in PreEnemy row should be moved to Enemy row at the start of enemy turn . 
-    // and then its attack should be resolved 
-    //     This could be implamented in the Board class.
-    enemy.drawCard();
-    if (!enemy.hand.empty()) {
-        for (int s = 0; s < 3; ++s) {
-            if (!board.enemyActiveCards[s]) {
-                Card* c = enemy.hand[0];
-                board.placeCard(entityType::ENEMY, c, s);
-                enemy.hand.erase(enemy.hand.begin());
-                std::cout << "Enemy placed " << c->name << " in slot " << s << "." << "\n";
-                break;
-            }
-        }
-    }
+
     board.resolveCombat(entityType::PLAYER);
     board.resolveCombat(entityType::ENEMY);
     board.onTurnEnd();

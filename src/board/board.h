@@ -33,6 +33,8 @@ public:
     void printHand(const std::vector<Card*>& hand);
     void printFullBoard();
 
+    void moveEnemyPreCardsToActive();
+
     void resolveCombat(entityType attackingSide);
     CombatContext resolveTargeting(Card* attacker, int lane, bool attackerIsPlayer);
     void resolveAttack(CombatContext& ctx);

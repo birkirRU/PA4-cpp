@@ -99,6 +99,17 @@ void Board::printBoard(const std::array<Card*, 3>& board) {
     std::cout << "\n";
 }
 
+void Board::moveEnemyPreCardsToActive() {
+    int index = 0;
+    for (Card* i : enemyPreCards) {
+        if (i && !enemyActiveCards[index]) {
+            enemyActiveCards[index] = i;
+            enemyPreCards[index] = nullptr;
+        }
+         index++;
+    };
+}
+
 void Board::printHand(const std::vector<Card*>& hand) {
     for (size_t i = 0; i < hand.size(); ++i) {
         std::cout << (i + 1) << ") " << formatCard(hand[i]) << " " << '\n';
