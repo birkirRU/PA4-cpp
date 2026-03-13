@@ -1,11 +1,13 @@
 #include "inscryption.h"
 
 void Game::startGame() {
-    battleManager.battle();
     
-    std::cout << "-----------------------" << std::endl;
-    std::cout << "                       " << std::endl;
-    std::cout << "  Welcome to the game  " << std::endl;
-    std::cout << "                       " << std::endl;
-    std::cout << "  Press anything to start" << std::endl;
+    std::cout << "-----------------------" << "\n";
+    std::cout << "                       " << "\n";
+    std::cout << "  Welcome to Inscryption " << "\n";
+    std::cout << "                       " << "\n";
+    std::cout << "  Press anything to start" << "\n";
+
+
+    battleManager.battle();
 }

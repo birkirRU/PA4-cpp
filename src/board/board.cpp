@@ -96,19 +96,19 @@ void Board::printBoard(const std::array<Card*, 3>& board) {
     for (const auto& c : board) {
         std::cout << formatCard(c) << " ";
     }
-    std::cout << std::endl;
+    std::cout << "\n";
 }
 
 void Board::printHand(const std::vector<Card*>& hand) {
     for (size_t i = 0; i < hand.size(); ++i) {
-        std::cout << (i + 1) << ") " << formatCard(hand[i]) << " ";
+        std::cout << (i + 1) << ") " << formatCard(hand[i]) << " " << '\n';
     }
-    std::cout << std::endl;
+    std::cout << "\n";
 }
 
 void Board::printFullBoard() {
     if (enemy) {
-        std::cout << "Enemy HP: " << enemy->health << std::endl;
+        std::cout << "Enemy HP: " << enemy->health << "\n";
     }
     std::cout << "Enemy Pre:  ";
     printBoard(enemyPreCards);
@@ -117,7 +117,7 @@ void Board::printFullBoard() {
     std::cout << "Player Row: ";
     printBoard(playerActiveCards);
     if (player) {
-        std::cout << "Player HP: " << player->health << std::endl;
+        std::cout << "Player HP: " << player->health << "\n";
     }
 }
 

@@ -20,7 +20,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "Build Compiler",
+            "preLaunchTask": "Build Inscryption",
             "miDebuggerPath": "/usr/bin/gdb"
         }
     ],

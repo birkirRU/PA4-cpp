@@ -14,7 +14,9 @@ private:
     std::vector<Card*> drawPile;
     std::vector<Card*> hand;
     std::vector<Card*> discardPile;
-
+    // May need to add a separate squirrel deck for player specific squirrel cards
+    // Could add conditional members (if constexpr), based on templated Deck
+    
 public:
     template<typename CardType>
     void addCard() {

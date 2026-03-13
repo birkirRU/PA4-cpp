@@ -9,6 +9,10 @@ Player::Player(int health) : Entity(health) {
 }
 
 void Player::drawSquirrel() {
+    // THIS NEEDS TO BE CHANGED, we need to draw from squirrel deck
+    // Or genereate a squirrel card instance, and only allow up to e.g. 10 cards
+    // Probably need a specific squirrel deck of unuiqe instances of squirrels card to draw from.
+    // Squirrel cards are player specific
     hand.push_back(deckObj.drawCard());
 }
 
@@ -18,7 +22,7 @@ void Player::drawCard() {
 
 void Player::playCard(Board& board) {
     if (hand.empty()) {
-        std::cout << "Your hand is empty." << std::endl;
+        std::cout << "Your hand is empty." << '\n';
         return;
     }
     std::cout << "Place a card? Enter hand number (1-" << hand.size() << ") and position in your row (0, 1, 2), or 0 to skip: ";
@@ -27,13 +31,15 @@ void Player::playCard(Board& board) {
     if (idx == 0) return;
     std::cin >> lane;
     if (idx < 1 || static_cast<size_t>(idx) > hand.size() || lane < 0 || lane > 2) {
-        std::cout << "Invalid input, skipped." << std::endl;
+        std::cout << "Invalid input, skipped." << '\n';
         return;
     }
     Card* chosen = hand[idx - 1];
+    // Need to check eligibilty of placement here, e.g. if lane is occupied 
+    // Also need to check if card there exists enough blood (enough cards on board to sacrifice) to place card if it has blood cost
     board.placeCard(entityType::PLAYER, chosen, lane);
     hand.erase(hand.begin() + (idx - 1));
-    std::cout << "Placed " << chosen->name << " in lane " << lane << "." << std::endl;
+    std::cout << "Placed " << chosen->name << " in lane " << lane << "." << '\n';
 }
 
 bool Player::sacrifice(Board& board, int bloodCost) {
@@ -45,7 +51,7 @@ bool Player::sacrifice(Board& board, int bloodCost) {
     }
     if (onBoard < bloodCost) {
         std::cout << "You need " << bloodCost << " blood but only have " << onBoard
-                << " card(s) on your row. Place more cards first." << std::endl;
+                << " card(s) on your row. Place more cards first." << '\n';
         return false;
     }
 
