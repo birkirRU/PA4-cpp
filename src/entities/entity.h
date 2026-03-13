@@ -26,7 +26,11 @@ class Entity {
         int maxHealth;
         int id;
 
-        Entity(int health, int max = -1): health(health), maxHealth(max >= 0 ? max : health), id(_nextId()) {};
+        Entity(int health, int max = -1): health(health), maxHealth(health), id(_nextId()) {
+            if (max >= 0) {
+                maxHealth = max;
+            }
+        };
 
         virtual void shuffleDeck();
         virtual void drawStartingHand();

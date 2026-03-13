@@ -6,11 +6,8 @@ bool AirborneSigil::canBeBlockedBy(const Card* blocker, int currentTurn) const {
     if (currentTurn != 0) {
         return true;
     }
-    if (!blocker) {
-        return true;
-    }
-    for (SigilName s : blocker->sigils) {
-        if (s == SigilName::MIGHTY_LEAP) {
+    for (SigilName sn : blocker->sigils) {
+        if (sn == SigilName::MIGHTY_LEAP) {
             return true;
         }
     }
@@ -21,11 +18,8 @@ bool MightyLeapSigil::canBlock(const Card* attacker, int currentTurn) const {
     if (currentTurn != 0) {
         return true;
     }
-    if (!attacker) {
-        return true;
-    }
-    for (SigilName s : attacker->sigils) {
-        if (s == SigilName::AIRBORNE) {
+    for (SigilName sn : attacker->sigils) {
+        if (sn == SigilName::AIRBORNE) {
             return true;
         }
     }
@@ -39,22 +33,18 @@ bool WaterborneSigil::canBlock(const Card*, int currentTurn) const {
     return false;
 }
 
-void FledglingSigil::onTurnEnd(CombatContext& ctx) {
-    if (!ctx.attacker) {
-        return;
-    }
-
-    if (ctx.attacker->isBase) {
-        ctx.attacker->name = "Wolf";
-        ctx.attacker->health = 3;
-        ctx.attacker->damage = 2;
-        ctx.attacker->bloodCost = 2;
-        ctx.attacker->sigils = {SigilName::MIGHTY_LEAP};
-        ctx.attacker->isBase = false;
+void FledglingSigil::onTurnEnd(CombatContext& context) {
+    if (context.attacker->isBase) {
+        context.attacker->name = "Wolf";
+        context.attacker->health = 3;
+        context.attacker->damage = 2;
+        context.attacker->bloodCost = 2;
+        context.attacker->sigils = {SigilName::MIGHTY_LEAP};
+        context.attacker->isBase = false;
     } else {
-        ctx.attacker->damage += 1;
-        ctx.attacker->health += 2;
-        ctx.attacker->sigils.clear();
+        context.attacker->damage += 1;
+        context.attacker->health += 2;
+        context.attacker->sigils.clear();
     }
 }
 

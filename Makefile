@@ -1,4 +1,3 @@
-# Output 'game' so grader can run: make && ./game
 GAME = game
 GAME_FILES = src/main.cpp src/inscryption.cpp $(wildcard src/*/*.cpp)
 

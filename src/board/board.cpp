@@ -24,14 +24,14 @@ static std::string formatSigils(const std::vector<SigilName>& sigils) {
         return "-";
     }
 
-    std::string result;
+    std::string out;
     for (size_t i = 0; i < sigils.size(); ++i) {
         if (i > 0) {
-            result += ",";
+            out += ",";
         }
-        result += sigilToShort(sigils[i]);
+        out += sigilToShort(sigils[i]);
     }
-    return result;
+    return out;
 }
 
 static std::string formatCard(const Card* c) {
@@ -59,10 +59,6 @@ Board::Board() : player(nullptr), enemy(nullptr), playerDeck(nullptr), enemyDeck
 }
 
 void Board::placeCard(entityType et, Card* card, int pos) {
-    if (pos < 0 || pos >= 3) {
-        return;
-    }
-    
     if (et == entityType::PLAYER) {
         playerActiveCards[pos] = card;
     } else if (et == entityType::ENEMY) {
@@ -73,26 +69,24 @@ void Board::placeCard(entityType et, Card* card, int pos) {
 }
 
 void Board::removeCard(entityType et, Card* card) {
-    if (!card) {
-        return;
-    }
-
-    std::array<Card*, 3>* listToCheck = nullptr;
+    std::array<Card*, 3>* arr = nullptr;
     if (et == entityType::PLAYER) {
-        listToCheck = &playerActiveCards;
+        arr = &playerActiveCards;
     } else if (et == entityType::ENEMY) {
-        listToCheck = &enemyActiveCards;
+        arr = &enemyActiveCards;
     } else if (et == entityType::ENEMY_PRE_PLACE) {
-        listToCheck = &enemyPreCards;
-    }
-    if (!listToCheck) {
-        return;
+        arr = &enemyPreCards;
     }
 
-    for (auto& c : *listToCheck) {
+    for (auto& c : *arr) {
         if (c == card) {
             if (card->health <= 0) {
-                Deck* deck = (et == entityType::PLAYER) ? playerDeck : enemyDeck;
+                Deck* deck = nullptr;
+                if (et == entityType::PLAYER) {
+                    deck = playerDeck;
+                } else {
+                    deck = enemyDeck;
+                }
                 if (deck) {
                     deck->discardCard(card);
                 }
@@ -129,14 +123,8 @@ void Board::printHand(const std::vector<Card*>& hand) {
 }
 
 void Board::printFullBoard() {
-    if (enemy) {
-        std::cout << "Enemy HP: " << enemy->health << "\n";
-    }
-
-    if (player) {
-        std::cout << "Player HP: " << player->health << "\n";
-    }
-
+    std::cout << "Enemy HP: " << enemy->health << "\n";
+    std::cout << "Player HP: " << player->health << "\n";
     std::cout << "Enemy Pre:  ";
     printBoard(enemyPreCards);
     std::cout << "Enemy Row:  ";
@@ -190,113 +178,136 @@ void Board::damagePlayer(int damage, bool toEnemy) {
     }
 }
 
-void Board::resolveCombat(entityType attackingSide) {
-    bool playerAttacking = (attackingSide == entityType::PLAYER);
-
-    for (int lane = 0; lane < 3; lane++) {
-        Card* attackerCard = nullptr;
-
-        if (playerAttacking) {
-            attackerCard = playerActiveCards[lane];
-        } else {
-            attackerCard = enemyActiveCards[lane];
-        }
-
-        if (!attackerCard) {
-            continue;
-        }
-
-        CombatContext ctx = resolveTargeting(attackerCard, lane, playerAttacking);
-        ctx.board = this;
-        ctx.deck = playerAttacking ? playerDeck : enemyDeck;
-        ctx.attackerLane = lane;
-        ctx.attackerIsPlayer = playerAttacking;
-
-        resolveAttack(ctx);
+static std::array<Card*, 3>& attackerRow(Board* b, bool playerAttacking) {
+    if (playerAttacking) {
+        return b->playerActiveCards;
+    } else {
+        return b->enemyActiveCards;
     }
+}
+
+static void runSigils(Card* card, void (Sigil::*method)(CombatContext&), CombatContext& context) {
+    for (SigilName sn : card->sigils) {
+        Sigil* sig = SigilRegister::instance().getSigil(sn);
+        if (sig) {
+            (sig->*method)(context);
+        }
+    }
+}
+
+static void attackToFace(Board* board, CombatContext& context, int damage) {
+    if (damage <= 0) {
+        return;
+    }
+    const char* side;
+    if (context.attackerIsPlayer) {
+        side = "Player";
+    } else {
+        side = "Enemy";
+    }
+    std::cout << side << " " << context.attacker->name << " took " << damage << " off the scale and put it on his (no blocker).\n";
+    board->damagePlayer(damage, context.attackerIsPlayer);
+}
+
+static void attackBlocker(Board* board, CombatContext& context, Card* blocker, int damage) {
+    if (damage <= 0) {
+        return;
+    }
+    const char* side;
+    if (context.attackerIsPlayer) {
+        side = "Player";
+    } else {
+        side = "Enemy";
+    }
+    int hpBefore = blocker->health;
+    blocker->health -= damage;
+
+    std::cout << side << " " << context.attacker->name << " (" << damage << " dmg) hit " << blocker->name;
+    if (blocker->health <= 0) {
+        std::cout << ", " << blocker->name << " killed.";
+        int overflow = damage - hpBefore;
+        if (overflow > 0) {
+            std::cout << " Took " << overflow << " off the scale and put it on his.";
+            board->damagePlayer(overflow, context.attackerIsPlayer);
+        }
+        std::cout << "\n";
+        entityType blockerSide;
+        if (context.attackerIsPlayer) {
+            blockerSide = entityType::ENEMY;
+        } else {
+            blockerSide = entityType::PLAYER;
+        }
+        board->removeCard(blockerSide, blocker);
+    } else {
+        std::cout << ", " << blocker->name << " has " << blocker->health << " hp left.\n";
+    }
+    runSigils(blocker, &Sigil::onBlock, context);
 }
 
 CombatContext Board::resolveTargeting(Card* attacker, int lane, bool attackerIsPlayer) {
-    CombatContext ctx;
-    ctx.attacker = attacker;
-    ctx.blockers.clear();
-    ctx.board = this;
+    CombatContext context;
+    context.attacker = attacker;
+    context.blockers.clear();
+    context.board = this;
 
-    int opposingLane = lane;
-    entityType opposingSide = attackerIsPlayer ? entityType::ENEMY : entityType::PLAYER;
-    Card* opposingCard = getCardAt(opposingSide, opposingLane);
-
-    if (!opposingCard) {
-        return ctx;
+    entityType opposingSide;
+    if (attackerIsPlayer) {
+        opposingSide = entityType::ENEMY;
+    } else {
+        opposingSide = entityType::PLAYER;
+    }
+    Card* opposing = getCardAt(opposingSide, lane);
+    if (!opposing) {
+        return context;
     }
 
-    for (SigilName sigilName : attacker->sigils) {
-        Sigil* sigil = SigilRegister::instance().getSigil(sigilName);
-        if (sigil && !sigil->canBeBlockedBy(opposingCard, this->currentTurn)) {
-            return ctx;
+    for (SigilName sn : attacker->sigils) {
+        Sigil* sig = SigilRegister::instance().getSigil(sn);
+        if (sig && !sig->canBeBlockedBy(opposing, currentTurn)) {
+            return context;
         }
     }
-
-    for (SigilName sigilName : opposingCard->sigils) {
-        Sigil* sigil = SigilRegister::instance().getSigil(sigilName);
-        if (sigil && !sigil->canBlock(attacker, this->currentTurn)) {
-            return ctx;
+    for (SigilName sn : opposing->sigils) {
+        Sigil* sig = SigilRegister::instance().getSigil(sn);
+        if (sig && !sig->canBlock(attacker, currentTurn)) {
+            return context;
         }
     }
-
-    ctx.blockers.push_back(opposingCard);
-    return ctx;
+    context.blockers.push_back(opposing);
+    return context;
 }
 
-void Board::resolveAttack(CombatContext& ctx) {
-    if (!ctx.attacker) {
-        return;
-    }
-
-    for (SigilName sigilName : ctx.attacker->sigils) {
-        Sigil* sigil = SigilRegister::instance().getSigil(sigilName);
-        if (sigil) {
-            sigil->onAttack(ctx);
-        }
-    }
-
-    int damage = ctx.attacker->damage;
-    const char* sideName = ctx.attackerIsPlayer ? "Player" : "Enemy";
-
-    if (ctx.blockers.empty()) {
-        if (damage > 0) {
-            std::cout << sideName << " " << ctx.attacker->name << " took " << damage << " off the scale and put it on his (no blocker).\n";
-            damagePlayer(damage, ctx.attackerIsPlayer);
-        }
+void Board::resolveAttack(CombatContext& context) {
+    runSigils(context.attacker, &Sigil::onAttack, context);
+    int damage = context.attacker->damage;
+    if (context.blockers.empty()) {
+        attackToFace(this, context, damage);
     } else {
-        for (Card* blocker : ctx.blockers) {
-            if (blocker && damage > 0) {
-                int blockerHealthBefore = blocker->health;
-                blocker->health -= damage;
-
-                std::cout << sideName << " " << ctx.attacker->name << " (" << damage << " dmg) hit " << blocker->name;
-                if (blocker->health <= 0) {
-                    int overflow = damage - blockerHealthBefore;
-                    std::cout << ", " << blocker->name << " killed.";
-                    if (overflow > 0) {
-                        std::cout << " Took " << overflow << " off the scale and put it on his.";
-                        damagePlayer(overflow, ctx.attackerIsPlayer);
-                    }
-                    std::cout << "\n";
-                    entityType blockerSide = ctx.attackerIsPlayer ? entityType::ENEMY : entityType::PLAYER;
-                    removeCard(blockerSide, blocker);
-                } else {
-                    std::cout << ", " << blocker->name << " has " << blocker->health << " hp left.\n";
-                }
-
-                for (SigilName sigilName : blocker->sigils) {
-                    Sigil* sigil = SigilRegister::instance().getSigil(sigilName);
-                    if (sigil) {
-                        sigil->onBlock(ctx);
-                    }
-                }
-            }
+        for (Card* blocker : context.blockers) {
+            attackBlocker(this, context, blocker, damage);
         }
+    }
+}
+
+void Board::resolveCombat(entityType attackingSide) {
+    bool playerAttacking = (attackingSide == entityType::PLAYER);
+    std::array<Card*, 3>& row = attackerRow(this, playerAttacking);
+
+    for (int lane = 0; lane < 3; lane++) {
+        Card* attacker = row[lane];
+        if (!attacker) {
+            continue;
+        }
+        CombatContext context = resolveTargeting(attacker, lane, playerAttacking);
+        context.board = this;
+        if (playerAttacking) {
+            context.deck = playerDeck;
+        } else {
+            context.deck = enemyDeck;
+        }
+        context.attackerLane = lane;
+        context.attackerIsPlayer = playerAttacking;
+        resolveAttack(context);
     }
 }
 
@@ -308,13 +319,13 @@ void Board::onTurnEnd() {
             for (SigilName sigilName : playerActiveCards[lane]->sigils) {
                 Sigil* sigil = SigilRegister::instance().getSigil(sigilName);
                 if (sigil) {
-                    CombatContext ctx;
-                    ctx.attacker = playerActiveCards[lane];
-                    ctx.board = this;
-                    ctx.deck = playerDeck;
-                    ctx.attackerLane = lane;
-                    ctx.attackerIsPlayer = true;
-                    sigil->onTurnEnd(ctx);
+                    CombatContext context;
+                    context.attacker = playerActiveCards[lane];
+                    context.board = this;
+                    context.deck = playerDeck;
+                    context.attackerLane = lane;
+                    context.attackerIsPlayer = true;
+                    sigil->onTurnEnd(context);
                 }
             }
         }
@@ -323,13 +334,13 @@ void Board::onTurnEnd() {
             for (SigilName sigilName : enemyActiveCards[lane]->sigils) {
                 Sigil* sigil = SigilRegister::instance().getSigil(sigilName);
                 if (sigil) {
-                    CombatContext ctx;
-                    ctx.attacker = enemyActiveCards[lane];
-                    ctx.board = this;
-                    ctx.deck = enemyDeck;
-                    ctx.attackerLane = lane;
-                    ctx.attackerIsPlayer = false;
-                    sigil->onTurnEnd(ctx);
+                    CombatContext context;
+                    context.attacker = enemyActiveCards[lane];
+                    context.board = this;
+                    context.deck = enemyDeck;
+                    context.attackerLane = lane;
+                    context.attackerIsPlayer = false;
+                    sigil->onTurnEnd(context);
                 }
             }
         }

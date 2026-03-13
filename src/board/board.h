@@ -37,7 +37,7 @@ public:
 
     void resolveCombat(entityType attackingSide);
     CombatContext resolveTargeting(Card* attacker, int lane, bool attackerIsPlayer);
-    void resolveAttack(CombatContext& ctx);
+    void resolveAttack(CombatContext& context);
 
     void onTurnEnd();
 

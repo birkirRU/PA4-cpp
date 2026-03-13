@@ -40,10 +40,10 @@ public:
     virtual void onBlock(CombatContext&) {}
     virtual void onTurnEnd(CombatContext&) {}
 
-    virtual bool canBeBlockedBy(const Card*, int x) const {
+    virtual bool canBeBlockedBy(const Card*, int) const {
         return true;
     }
-    virtual bool canBlock(const Card*, int x) const {
+    virtual bool canBlock(const Card*, int) const {
         return true;
     }
 };
