@@ -40,28 +40,27 @@ public:
     virtual void onBlock(CombatContext&) {}
     virtual void onTurnEnd(CombatContext&) {}
 
-    virtual bool canBeBlockedBy(const Card*) const { return true; }
-    virtual bool canBlock(const Card*) const { return true; }
+    virtual bool canBeBlockedBy(const Card*, int x) const {
+        return true;
+    }
+    virtual bool canBlock(const Card*, int x) const {
+        return true;
+    }
 };
 
 class AirborneSigil : public Sigil {
 public:
-    bool canBeBlockedBy(const Card* blocker) const override;
+    bool canBeBlockedBy(const Card* blocker, int currentTurn) const override;
 };
 
 class MightyLeapSigil : public Sigil {
 public:
-    bool canBlock(const Card* attacker) const override;
+    bool canBlock(const Card* attacker, int currentTurn) const override;
 };
 
 class WaterborneSigil : public Sigil {
 public:
-    WaterborneSigil();
-    bool canBeBlockedBy(const Card* blocker) const override;
-    void onTurnEnd(CombatContext&) override;
-
-private:
-    int turnCounter;
+    bool canBlock(const Card*, int currentTurn) const override;
 };
 
 class FledglingSigil : public Sigil {

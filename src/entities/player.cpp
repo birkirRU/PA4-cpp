@@ -15,7 +15,10 @@ void Player::drawSquirrel() {
 }
 
 void Player::drawCard() {
-    hand.push_back(deckObj.drawCard());
+    Card* c = deckObj.drawCard();
+    if (c) {
+        hand.push_back(c);
+    }
 }
 
 static std::string toLower(const std::string& s) {

@@ -19,29 +19,19 @@ void Enemy::randomPreRow (int round, std::array<Card*, 3>& enemyPreCards, std::a
 
     if (!random_card) {
         return;
-    };
+    }
 
-    bool open_slot = false;
-
+    std::vector<int> empty_slots;
     for (int i = 0; i < 3; i++) {
-        if (!enemyPreCards[i] && !enemyActiveCards[i]) { 
-            open_slot = true; 
-            break; }
-    }
-
-    if (!open_slot) {
-        return;
-    };
-
-    while (true) {
-        srand(time(nullptr));
-        int randomNum = rand() % 3;
-
-        if (!enemyPreCards[randomNum]  && !enemyActiveCards[randomNum]) {
-            enemyPreCards[randomNum] = random_card;
-            break;
+        if (!enemyPreCards[i] && !enemyActiveCards[i]) {
+            empty_slots.push_back(i);
         }
-
     }
 
+    if (empty_slots.empty()) {
+        return;
+    }
+
+    int idx = empty_slots[rand() % empty_slots.size()];
+    enemyPreCards[idx] = random_card;
 }

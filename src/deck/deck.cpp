@@ -2,6 +2,15 @@
 
 
 Card* Deck::drawCard() {
+    if (drawPile.empty() && !discardPile.empty()) {
+        for (Card* c : discardPile) {
+            drawPile.push_back(c);
+        }
+        discardPile.clear();
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::shuffle(drawPile.begin(), drawPile.end(), g);
+    }
     if (drawPile.empty()) {
         return nullptr;
     }

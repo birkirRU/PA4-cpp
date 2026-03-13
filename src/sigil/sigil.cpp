@@ -2,7 +2,10 @@
 #include "../card/card.h"
 #include "../board/board.h"
 
-bool AirborneSigil::canBeBlockedBy(const Card* blocker) const {
+bool AirborneSigil::canBeBlockedBy(const Card* blocker, int currentTurn) const {
+    if (currentTurn != 0) {
+        return true;
+    }
     if (!blocker) {
         return true;
     }
@@ -14,7 +17,10 @@ bool AirborneSigil::canBeBlockedBy(const Card* blocker) const {
     return false;
 }
 
-bool MightyLeapSigil::canBlock(const Card* attacker) const {
+bool MightyLeapSigil::canBlock(const Card* attacker, int currentTurn) const {
+    if (currentTurn != 0) {
+        return true;
+    }
     if (!attacker) {
         return true;
     }
@@ -26,14 +32,11 @@ bool MightyLeapSigil::canBlock(const Card* attacker) const {
     return true;
 }
 
-WaterborneSigil::WaterborneSigil() : turnCounter(0) {}
-
-bool WaterborneSigil::canBeBlockedBy(const Card*) const {
-    return (turnCounter % 2 == 1);
-}
-
-void WaterborneSigil::onTurnEnd(CombatContext&) {
-    turnCounter++;
+bool WaterborneSigil::canBlock(const Card*, int currentTurn) const {
+    if (currentTurn != 0) {
+        return true;
+    }
+    return false;
 }
 
 void FledglingSigil::onTurnEnd(CombatContext& ctx) {

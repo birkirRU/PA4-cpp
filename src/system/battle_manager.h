@@ -18,7 +18,8 @@ class BattleManager {
 
     public:
         BattleManager(Player& player, Enemy& enemy, Board& board) :
-            player(player), enemy(enemy), board(board) {}
+            player(player), enemy(enemy), board(board) {
+        }
         void battle();
 };
 #endif

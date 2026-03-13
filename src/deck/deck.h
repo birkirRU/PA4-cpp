@@ -21,15 +21,19 @@ public:
         auto ptr = std::make_unique<CardType>();
         drawPile.push_back(ptr.get());
         cards.push_back(std::move(ptr));
-}
+    }
 
     Card* drawCard();
     void discardCard(Card* card);
     void shuffle();
     Card* random_card_max_blood(int max_blood);
 
-    std::vector<Card*>& getHand() { return hand; }
-    const std::vector<Card*>& getHand() const { return hand; }
+    std::vector<Card*>& getHand() {
+        return hand;
+    }
+    const std::vector<Card*>& getHand() const {
+        return hand;
+    }
 };
 
 #endif

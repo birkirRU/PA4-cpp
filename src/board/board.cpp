@@ -232,14 +232,14 @@ CombatContext Board::resolveTargeting(Card* attacker, int lane, bool attackerIsP
 
     for (SigilName sigilName : attacker->sigils) {
         Sigil* sigil = SigilRegister::instance().getSigil(sigilName);
-        if (sigil && !sigil->canBeBlockedBy(opposingCard)) {
+        if (sigil && !sigil->canBeBlockedBy(opposingCard, this->currentTurn)) {
             return ctx;
         }
     }
 
     for (SigilName sigilName : opposingCard->sigils) {
         Sigil* sigil = SigilRegister::instance().getSigil(sigilName);
-        if (sigil && !sigil->canBlock(attacker)) {
+        if (sigil && !sigil->canBlock(attacker, this->currentTurn)) {
             return ctx;
         }
     }
