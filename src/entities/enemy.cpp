@@ -2,10 +2,16 @@
 
 Enemy::Enemy(int health, int maxHealth) : Entity(health, maxHealth) {
     deckObj.addCard<Bullfrog>();
-    deckObj.addCard<Wolf>();
+    deckObj.addCard<Bullfrog>();
+    deckObj.addCard<Bullfrog>();
     deckObj.addCard<Raven>();
-    deckObj.addCard<GreatWhite>();
+    deckObj.addCard<Raven>();
+    deckObj.addCard<Raven>();
+    deckObj.addCard<Wolf>();
     deckObj.addCard<WolfCup>();
+    deckObj.addCard<WolfCup>();
+    deckObj.addCard<GreatWhite>();
+    deckObj.addCard<GreatWhite>();
 }
 
 void Enemy::randomPreRow (int round, std::array<Card*, 3>& enemyPreCards, std::array<Card*, 3>& enemyActiveCards) {
