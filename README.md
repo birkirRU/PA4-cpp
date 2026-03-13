@@ -32,6 +32,4 @@ You will also be asked if you want to draw a card or a squirrel. Please answer w
 
 **Structure:** 
 
-**Polymorphism:** 
-
 **Extend:** 
