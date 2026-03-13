@@ -110,15 +110,18 @@ void Board::printFullBoard() {
     if (enemy) {
         std::cout << "Enemy HP: " << enemy->health << "\n";
     }
+
+    if (player) {
+        std::cout << "Player HP: " << player->health << "\n";
+    }
+
     std::cout << "Enemy Pre:  ";
     printBoard(enemyPreCards);
     std::cout << "Enemy Row:  ";
     printBoard(enemyActiveCards);
     std::cout << "Player Row: ";
     printBoard(playerActiveCards);
-    if (player) {
-        std::cout << "Player HP: " << player->health << "\n";
-    }
+    std::cout << "                       " << "\n";
 }
 
 Card* Board::getCardAt(entityType et, int lane) {

@@ -7,6 +7,7 @@ void Game::startGame() {
     std::cout << "  Welcome to Inscryption " << "\n";
     std::cout << "                       " << "\n";
     std::cout << "  Press anything to start" << "\n";
+    std::cout << "                       " << "\n";
 
 
     battleManager.battle();

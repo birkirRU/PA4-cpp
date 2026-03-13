@@ -13,7 +13,7 @@ void Player::drawSquirrel() {
     // Or genereate a squirrel card instance, and only allow up to e.g. 10 cards
     // Probably need a specific squirrel deck of unuiqe instances of squirrels card to draw from.
     // Squirrel cards are player specific
-    hand.push_back(deckObj.drawCard());
+     hand.push_back(new Squirrel());
 }
 
 void Player::drawCard() {

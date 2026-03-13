@@ -33,16 +33,13 @@ void BattleManager::initializeTurn() {
 
     // this is wrong, you are only allowed to draw either a regular card or a squirrel.
     std::string temp;
-    std::cout << "Do you want to draw a card?: (yes/no) ";
+    std::cout << "Do you want to draw a card from deck or a squirrel?: (s/c): ";
     std::cin >> temp;
 
-    if (temp == "yes") {
+    if (temp == "c") {
         player.drawCard();
     }
-    std::cout << "Do you want to draw a squirrel?: (yes/no) ";
-    std::cin >> temp;
-
-    if (temp == "yes") {
+   else {
         player.drawSquirrel();
     }
 
