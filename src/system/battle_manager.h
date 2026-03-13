@@ -12,7 +12,7 @@ class BattleManager {
         Board& board;
 
         void initBattle();
-        void initializeTurn();
+        void initializeTurn(int round);
         void playTurn(); 
         
 

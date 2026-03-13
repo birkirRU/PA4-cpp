@@ -27,3 +27,16 @@ void Deck::shuffle() {
     std::shuffle(drawPile.begin(), drawPile.end(), g);
 }
 
+Card* Deck::random_card_max_blood (int max_blood) {
+    std::vector<Card*> temp;
+    for (int i = 0; i < (int)drawPile.size(); i++) {
+        if (drawPile[i]->bloodCost <= max_blood) {
+            temp.push_back(drawPile[i]);
+        }
+    }
+
+    if (temp.empty()) return nullptr;
+
+    int randomNum = rand() % temp.size();
+    return temp[randomNum];
+}

@@ -3,10 +3,12 @@
 
 void BattleManager::battle() {
     
+    int round = 0;
     initBattle();
     while (!player.isDead() && !enemy.isDead()) {
-        initializeTurn();
+        initializeTurn(round);
         playTurn();
+        round++;
     }
 
     if (player.isDead()) {
@@ -24,10 +26,10 @@ void BattleManager::initBattle() {
     enemy.drawStartingHand();
 }
 
-void BattleManager::initializeTurn() {
+void BattleManager::initializeTurn(int round) {
 
     board.moveEnemyPreCardsToActive();
-    enemy.randomPreRow(board.enemyPreCards, board.enemyActiveCards);
+    enemy.randomPreRow(round, board.enemyPreCards, board.enemyActiveCards);
     board.printFullBoard();
 
     if (board.currentTurn > 0) {

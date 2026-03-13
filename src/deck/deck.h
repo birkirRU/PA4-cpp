@@ -28,6 +28,7 @@ public:
     Card* drawCard();
     void discardCard(Card* card);
     void shuffle();
+    Card* random_card_max_blood(int max_blood);
 
     std::vector<Card*>& getHand() { return hand; }
     const std::vector<Card*>& getHand() const { return hand; }

@@ -8,13 +8,17 @@ Enemy::Enemy(int health) : Entity(health) {
     deckObj.addCard<WolfCup>();
 }
 
-void Enemy::randomPreRow (std::array<Card*, 3>& enemyPreCards, std::array<Card*, 3>& enemyActiveCards) {
-    Card* random_card = deckObj.drawCard();
+void Enemy::randomPreRow (int round, std::array<Card*, 3>& enemyPreCards, std::array<Card*, 3>& enemyActiveCards) {
+    Card* random_card = deckObj.random_card_max_blood(round + 1);
+
+    if (!random_card) {
+        return;
+    };
 
     bool open_slot = false;
 
     for (int i = 0; i < 3; i++) {
-        if (!enemyPreCards[i]) { 
+        if (!enemyPreCards[i] && !enemyActiveCards[i]) { 
             open_slot = true; 
             break; }
     }
