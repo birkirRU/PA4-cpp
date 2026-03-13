@@ -13,7 +13,8 @@ public:
     Player(int health);
     void drawCard();
     void drawSquirrel();
-    void playCard(Board& board);
+    /** Returns true if a card was placed (continue turn), false if player chose to end turn (0/done) or hand empty. */
+    bool playCard(Board& board);
     bool sacrifice(Board& board, int bloodCost);
 };
 #endif // ENTITIES_PLAYER_H_

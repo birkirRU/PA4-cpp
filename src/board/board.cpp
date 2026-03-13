@@ -230,15 +230,22 @@ void Board::resolveAttack(CombatContext& ctx) {
     }
 
     if (ctx.blockers.empty()) {
-        damagePlayer(ctx.attacker->damage, !ctx.attackerIsPlayer);
+        damagePlayer(ctx.attacker->damage, ctx.attackerIsPlayer);
     } else {
         for (Card* blocker : ctx.blockers) {
-            if (blocker) {
+            if (blocker && ctx.attacker->damage > 0) {
+                int blockerHealthBefore = blocker->health;
                 blocker->health -= ctx.attacker->damage;
 
+                int overflow = 0;
                 if (blocker->health <= 0) {
+                    overflow = ctx.attacker->damage - blockerHealthBefore;
                     entityType blockerSide = ctx.attackerIsPlayer ? entityType::ENEMY : entityType::PLAYER;
                     removeCard(blockerSide, blocker);
+                }
+
+                if (overflow > 0) {
+                    damagePlayer(overflow, ctx.attackerIsPlayer);
                 }
 
                 for (SigilName sigilName : blocker->sigils) {

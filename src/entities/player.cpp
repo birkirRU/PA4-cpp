@@ -1,4 +1,6 @@
 #include "player.h"
+#include <string>
+#include <cctype>
 
 Player::Player(int health) : Entity(health) {
     deckObj.addCard<Bullfrog>();
@@ -20,26 +22,60 @@ void Player::drawCard() {
     hand.push_back(deckObj.drawCard());
 }
 
-void Player::playCard(Board& board) {
+static std::string toLower(const std::string& s) {
+    std::string r = s;
+    for (char& c : r) c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    return r;
+}
+
+bool Player::playCard(Board& board) {
     if (hand.empty()) {
         std::cout << "Your hand is empty." << '\n';
-        return;
+        return false;
     }
-    std::cout << "Place a card? Enter hand number (1-" << hand.size() << ") and position in your row (0, 1, 2), or 0 to skip: ";
-    int idx, lane;
-    std::cin >> idx;
-    if (idx == 0) return;
-    std::cin >> lane;
-    if (idx < 1 || static_cast<size_t>(idx) > hand.size() || lane < 0 || lane > 2) {
-        std::cout << "Invalid input, skipped." << '\n';
-        return;
+    std::cout << "Place a card: hand number (1-" << hand.size() << ") and position (0, 1, or 2). Type done to end your turn: ";
+    std::string first;
+    std::cin >> first;
+    if (toLower(first) == "done") {
+        std::cout << "Turn ended." << '\n';
+        return false;
+    }
+    int idx = 0;
+    try {
+        idx = std::stoi(first);
+    } catch (...) {
+        std::cout << "Invalid input." << '\n';
+        return true;
+    }
+    int pos;
+    std::cin >> pos;
+    if (idx < 1 || static_cast<size_t>(idx) > hand.size() || pos < 0 || pos > 2) {
+        std::cout << "Invalid input." << '\n';
+        return true;
     }
     Card* chosen = hand[idx - 1];
-    // Need to check eligibilty of placement here, e.g. if lane is occupied 
-    // Also need to check if card there exists enough blood (enough cards on board to sacrifice) to place card if it has blood cost
-    board.placeCard(entityType::PLAYER, chosen, lane);
+    if (!chosen) {
+        std::cout << "Invalid card." << '\n';
+        return true;
+    }
+
+    if (board.getCardAt(entityType::PLAYER, pos)) {
+        std::cout << "Position " << pos << " is already occupied. Pick an empty position (0, 1, or 2)." << '\n';
+        return true;
+    }
+
+    if (chosen->bloodCost > 0) {
+        std::cout << chosen->name << " costs " << chosen->bloodCost << " blood. You must sacrifice that many cards from your row first." << '\n';
+        if (!sacrifice(board, chosen->bloodCost)) {
+            std::cout << "Placement cancelled." << '\n';
+            return true;
+        }
+    }
+
+    board.placeCard(entityType::PLAYER, chosen, pos);
     hand.erase(hand.begin() + (idx - 1));
-    std::cout << "Placed " << chosen->name << " in lane " << lane << "." << '\n';
+    std::cout << "Placed " << chosen->name << " in position " << pos << "." << '\n';
+    return true;
 }
 
 bool Player::sacrifice(Board& board, int bloodCost) {
@@ -55,19 +91,41 @@ bool Player::sacrifice(Board& board, int bloodCost) {
         return false;
     }
 
-    std::cout << "You need " << bloodCost << " blood. Sacrifice " << bloodCost
-            << " card(s) from your row. Enter " << bloodCost << " slot(s) (0, 1, or 2), e.g. 0 1: ";
+    std::cout << "Sacrifice " << bloodCost << " card(s). Enter " << bloodCost
+            << " position(s) (0, 1, or 2), one per card, e.g. ";
+    if (bloodCost == 1) std::cout << "0";
+    else if (bloodCost == 2) std::cout << "0 1";
+    else std::cout << "0 1 2";
+    std::cout << ": ";
 
-    std::vector<int> slots;
+    std::vector<int> positions;
     for (int i = 0; i < bloodCost; ++i) {
-        int slot;
-        std::cin >> slot;
-        slots.push_back(slot);
+        int pos;
+        std::cin >> pos;
+        if (pos < 0 || pos > 2) {
+            std::cout << "Invalid position " << pos << ". Use 0, 1, or 2." << '\n';
+            return false;
+        }
+        if (!board.getCardAt(entityType::PLAYER, pos)) {
+            std::cout << "Position " << pos << " has no card to sacrifice." << '\n';
+            return false;
+        }
+        positions.push_back(pos);
     }
 
-    for (int s : slots) {
-        Card* card = board.getCardAt(entityType::PLAYER, s);
+    for (int i = 0; i < static_cast<int>(positions.size()); ++i) {
+        for (int j = i + 1; j < static_cast<int>(positions.size()); ++j) {
+            if (positions[i] == positions[j]) {
+                std::cout << "Each sacrifice must be a different position. You entered position " << positions[i] << " more than once." << '\n';
+                return false;
+            }
+        }
+    }
+
+    for (int pos : positions) {
+        Card* card = board.getCardAt(entityType::PLAYER, pos);
         if (card) board.removeCard(entityType::PLAYER, card);
     }
+    std::cout << "Sacrificed " << bloodCost << " card(s)." << '\n';
     return true;
 }
