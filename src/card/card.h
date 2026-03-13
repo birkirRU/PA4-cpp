@@ -49,4 +49,4 @@ public:
     WolfCup() : Card("WolfCup", 1, 1, 1, {SigilName::FLEDGING}, true) {}
 };
 
-#endif // CARD_CARD_H_
+#endif

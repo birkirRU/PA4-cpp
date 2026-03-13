@@ -35,8 +35,10 @@ Card* Deck::random_card_max_blood (int max_blood) {
         }
     }
 
-    if (temp.empty()) return nullptr;
-
+    if (temp.empty()) {
+        return nullptr;
+    }
+    srand(time(nullptr));
     int randomNum = rand() % temp.size();
     return temp[randomNum];
 }

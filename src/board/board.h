@@ -45,4 +45,4 @@ public:
     void damagePlayer(int damage, bool toEnemy);
 };
 
-#endif // BOARD_BOARD_H_
+#endif

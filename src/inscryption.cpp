@@ -9,6 +9,6 @@ void Game::startGame() {
     std::cout << "  Press anything to start" << "\n";
     std::cout << "                       " << "\n";
 
-
+    std::cin.ignore();
     battleManager.battle();
 }

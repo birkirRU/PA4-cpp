@@ -58,12 +58,18 @@ void BattleManager::playTurn() {
     board.resolveCombat(entityType::PLAYER);
     std::cout << "Board after your attacks:\n";
     board.printFullBoard();
+    if (enemy.isDead()) {
+        return;
+    }
 
     std::cout << "\n--- Enemy attacks ---\n";
     board.moveEnemyPreCardsToActive();
     board.resolveCombat(entityType::ENEMY);
     std::cout << "Board after enemy attacks:\n";
     board.printFullBoard();
+    if (player.isDead()) {
+        return;
+    }
 
     board.onTurnEnd();
 }

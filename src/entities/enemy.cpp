@@ -1,6 +1,6 @@
 #include "enemy.h"
 
-Enemy::Enemy(int health) : Entity(health) {
+Enemy::Enemy(int health, int maxHealth) : Entity(health, maxHealth) {
     deckObj.addCard<Bullfrog>();
     deckObj.addCard<Wolf>();
     deckObj.addCard<Raven>();
@@ -28,6 +28,7 @@ void Enemy::randomPreRow (int round, std::array<Card*, 3>& enemyPreCards, std::a
     };
 
     while (true) {
+        srand(time(nullptr));
         int randomNum = rand() % 3;
 
         if (!enemyPreCards[randomNum]  && !enemyActiveCards[randomNum]) {

@@ -18,11 +18,15 @@ void Entity::shuffleDeck() {
 void Entity::drawStartingHand() {
     for (int i = 0; i < 3; i++) {
         Card* c = deckObj.drawCard();
-        if (c) hand.push_back(c);
+        if (c) {
+            hand.push_back(c);
+        }
     }
 }
 
 void Entity::drawCard() {
     Card* c = deckObj.drawCard();
-    if (c) hand.push_back(c);
+    if (c) {
+        hand.push_back(c);
+    }
 }

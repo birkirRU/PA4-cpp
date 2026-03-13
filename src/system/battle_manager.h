@@ -21,4 +21,4 @@ class BattleManager {
             player(player), enemy(enemy), board(board) {}
         void battle();
 };
-#endif // SYSTEM_BATTLE_MANAGER_H_
+#endif

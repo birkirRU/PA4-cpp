@@ -6,9 +6,9 @@
 
 class Enemy : public Entity {
 public:
-    Enemy(int health) ;
+    Enemy(int health, int maxHealth = -1);
     void randomPreRow (int round, std::array<Card*, 3>& enemyPreCards, std::array<Card*, 3>& enemyActiveCards);
 private:
      std::vector<Card*> preCards;
 };
-#endif // ENTITIES_ENEMY_H_
+#endif

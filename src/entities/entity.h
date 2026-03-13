@@ -23,13 +23,14 @@ class Entity {
 
     public:
         int health;
+        int maxHealth;
         int id;
 
-        Entity(int health): health(health), id(_nextId()) {};
+        Entity(int health, int max = -1): health(health), maxHealth(max >= 0 ? max : health), id(_nextId()) {};
 
         virtual void shuffleDeck();
         virtual void drawStartingHand();
         virtual void drawCard();
         virtual bool isDead() const; 
 };
-#endif // ENTITIES_ENTITY_H_
+#endif

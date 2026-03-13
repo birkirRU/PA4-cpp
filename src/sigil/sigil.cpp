@@ -3,7 +3,9 @@
 #include "../board/board.h"
 
 bool AirborneSigil::canBeBlockedBy(const Card* blocker) const {
-    if (!blocker) return true;
+    if (!blocker) {
+        return true;
+    }
     for (SigilName s : blocker->sigils) {
         if (s == SigilName::MIGHTY_LEAP) {
             return true;
@@ -13,7 +15,9 @@ bool AirborneSigil::canBeBlockedBy(const Card* blocker) const {
 }
 
 bool MightyLeapSigil::canBlock(const Card* attacker) const {
-    if (!attacker) return true;
+    if (!attacker) {
+        return true;
+    }
     for (SigilName s : attacker->sigils) {
         if (s == SigilName::AIRBORNE) {
             return true;
@@ -24,7 +28,7 @@ bool MightyLeapSigil::canBlock(const Card* attacker) const {
 
 WaterborneSigil::WaterborneSigil() : turnCounter(0) {}
 
-bool WaterborneSigil::canBeBlockedBy(const Card* /* blocker */) const {
+bool WaterborneSigil::canBeBlockedBy(const Card*) const {
     return (turnCounter % 2 == 1);
 }
 
@@ -33,7 +37,9 @@ void WaterborneSigil::onTurnEnd(CombatContext&) {
 }
 
 void FledglingSigil::onTurnEnd(CombatContext& ctx) {
-    if (!ctx.attacker) return;
+    if (!ctx.attacker) {
+        return;
+    }
 
     if (ctx.attacker->isBase) {
         ctx.attacker->name = "Wolf";
@@ -41,6 +47,7 @@ void FledglingSigil::onTurnEnd(CombatContext& ctx) {
         ctx.attacker->damage = 2;
         ctx.attacker->bloodCost = 2;
         ctx.attacker->sigils = {SigilName::MIGHTY_LEAP};
+        ctx.attacker->isBase = false;
     } else {
         ctx.attacker->damage += 1;
         ctx.attacker->health += 2;

@@ -80,4 +80,4 @@ private:
     std::array<std::unique_ptr<Sigil>, 4> sigils;
 };
 
-#endif // SIGIL_SIGIL_H_
+#endif

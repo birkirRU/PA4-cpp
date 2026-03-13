@@ -16,8 +16,8 @@ class Game {
         BattleManager battleManager;
 
         Game()
-            : player(5),
-              enemy(5),
+            : player(5, 10),
+              enemy(5, 10),
               board(),
               battleManager(player, enemy, board) {
             board.player = &player;
@@ -29,4 +29,4 @@ class Game {
         void startGame();
         void endGame();
 };
-#endif // INSCRYPTION_H_
+#endif

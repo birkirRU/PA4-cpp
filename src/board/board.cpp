@@ -20,19 +20,24 @@ static std::string sigilToShort(SigilName s) {
 }
 
 static std::string formatSigils(const std::vector<SigilName>& sigils) {
-    if (sigils.empty()) return "-";
+    if (sigils.empty()) {
+        return "-";
+    }
 
     std::string result;
     for (size_t i = 0; i < sigils.size(); ++i) {
-        if (i > 0) result += ",";
+        if (i > 0) {
+            result += ",";
+        }
         result += sigilToShort(sigils[i]);
     }
     return result;
 }
 
 static std::string formatCard(const Card* c) {
-    if (!c) return "[empty]";
-    // Format: [Wolf 3/2 C:2 S:ML] <- Format now, we can change this later if we have sth thatrs better
+    if (!c || c->health <= 0) {
+        return "[empty]";
+    }
     std::string s = "[";
     s += c->name;
     s += " ";
@@ -54,7 +59,9 @@ Board::Board() : player(nullptr), enemy(nullptr), playerDeck(nullptr), enemyDeck
 }
 
 void Board::placeCard(entityType et, Card* card, int pos) {
-    if (pos < 0 || pos >= 3) return;
+    if (pos < 0 || pos >= 3) {
+        return;
+    }
     
     if (et == entityType::PLAYER) {
         playerActiveCards[pos] = card;
@@ -66,7 +73,9 @@ void Board::placeCard(entityType et, Card* card, int pos) {
 }
 
 void Board::removeCard(entityType et, Card* card) {
-    if (!card) return;
+    if (!card) {
+        return;
+    }
 
     std::array<Card*, 3>* listToCheck = nullptr;
     if (et == entityType::PLAYER) {
@@ -76,7 +85,9 @@ void Board::removeCard(entityType et, Card* card) {
     } else if (et == entityType::ENEMY_PRE_PLACE) {
         listToCheck = &enemyPreCards;
     }
-    if (!listToCheck) return;
+    if (!listToCheck) {
+        return;
+    }
 
     for (auto& c : *listToCheck) {
         if (c == card) {
@@ -106,13 +117,13 @@ void Board::moveEnemyPreCardsToActive() {
             enemyActiveCards[index] = i;
             enemyPreCards[index] = nullptr;
         }
-         index++;
-    };
+        index++;
+    }
 }
 
 void Board::printHand(const std::vector<Card*>& hand) {
     for (size_t i = 0; i < hand.size(); ++i) {
-        std::cout << (i + 1) << ") " << formatCard(hand[i]) << " " << '\n';
+        std::cout << (i + 1) << ") " << formatCard(hand[i]) << "\n";
     }
     std::cout << "\n";
 }
@@ -136,7 +147,9 @@ void Board::printFullBoard() {
 }
 
 Card* Board::getCardAt(entityType et, int lane) {
-    if (lane < 0 || lane >= 3) return nullptr;
+    if (lane < 0 || lane >= 3) {
+        return nullptr;
+    }
 
     if (et == entityType::PLAYER) {
         return playerActiveCards[lane];
@@ -147,16 +160,32 @@ Card* Board::getCardAt(entityType et, int lane) {
 }
 
 void Board::damagePlayer(int damage, bool toEnemy) {
-    if (damage <= 0) return;
+    if (damage <= 0) {
+        return;
+    }
     if (toEnemy) {
-        if (enemy) {
-            enemy->health -= damage;
-            if (player) player->health += damage;
+        if (enemy && player) {
+            int transfer = damage;
+            if (transfer > enemy->health) {
+                transfer = enemy->health;
+            }
+            enemy->health -= transfer;
+            player->health += transfer;
+            if (player->health > player->maxHealth) {
+                player->health = player->maxHealth;
+            }
         }
     } else {
-        if (player) {
-            player->health -= damage;
-            if (enemy) enemy->health += damage;
+        if (player && enemy) {
+            int transfer = damage;
+            if (transfer > player->health) {
+                transfer = player->health;
+            }
+            player->health -= transfer;
+            enemy->health += transfer;
+            if (enemy->health > enemy->maxHealth) {
+                enemy->health = enemy->maxHealth;
+            }
         }
     }
 }
@@ -220,7 +249,9 @@ CombatContext Board::resolveTargeting(Card* attacker, int lane, bool attackerIsP
 }
 
 void Board::resolveAttack(CombatContext& ctx) {
-    if (!ctx.attacker) return;
+    if (!ctx.attacker) {
+        return;
+    }
 
     for (SigilName sigilName : ctx.attacker->sigils) {
         Sigil* sigil = SigilRegister::instance().getSigil(sigilName);
@@ -234,7 +265,7 @@ void Board::resolveAttack(CombatContext& ctx) {
 
     if (ctx.blockers.empty()) {
         if (damage > 0) {
-            std::cout << sideName << " " << ctx.attacker->name << " attacked for " << damage << " damage (no blocker)." << "\n";
+            std::cout << sideName << " " << ctx.attacker->name << " took " << damage << " off the scale and put it on his (no blocker).\n";
             damagePlayer(damage, ctx.attackerIsPlayer);
         }
     } else {
@@ -246,16 +277,16 @@ void Board::resolveAttack(CombatContext& ctx) {
                 std::cout << sideName << " " << ctx.attacker->name << " (" << damage << " dmg) hit " << blocker->name;
                 if (blocker->health <= 0) {
                     int overflow = damage - blockerHealthBefore;
-                    std::cout << " — " << blocker->name << " killed.";
+                    std::cout << ", " << blocker->name << " killed.";
                     if (overflow > 0) {
-                        std::cout << " " << overflow << " overflow to face.";
+                        std::cout << " Took " << overflow << " off the scale and put it on his.";
                         damagePlayer(overflow, ctx.attackerIsPlayer);
                     }
                     std::cout << "\n";
                     entityType blockerSide = ctx.attackerIsPlayer ? entityType::ENEMY : entityType::PLAYER;
                     removeCard(blockerSide, blocker);
                 } else {
-                    std::cout << " — " << blocker->name << " has " << blocker->health << " HP left.\n";
+                    std::cout << ", " << blocker->name << " has " << blocker->health << " hp left.\n";
                 }
 
                 for (SigilName sigilName : blocker->sigils) {
