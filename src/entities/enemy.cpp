@@ -8,7 +8,7 @@ Enemy::Enemy(int health) : Entity(health) {
     deckObj.addCard<WolfCup>();
 }
 
-void Enemy::randomPreRow (std::array<Card*, 3>& enemyPreCards) {
+void Enemy::randomPreRow (std::array<Card*, 3>& enemyPreCards, std::array<Card*, 3>& enemyActiveCards) {
     Card* random_card = deckObj.drawCard();
 
     bool open_slot = false;
@@ -26,7 +26,7 @@ void Enemy::randomPreRow (std::array<Card*, 3>& enemyPreCards) {
     while (true) {
         int randomNum = rand() % 3;
 
-        if (!enemyPreCards[randomNum]) {
+        if (!enemyPreCards[randomNum]  && !enemyActiveCards[randomNum]) {
             enemyPreCards[randomNum] = random_card;
             break;
         }

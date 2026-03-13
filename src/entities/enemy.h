@@ -7,7 +7,7 @@
 class Enemy : public Entity {
 public:
     Enemy(int health) ;
-    void randomPreRow (std::array<Card*, 3>& enemyPreCards);
+    void randomPreRow (std::array<Card*, 3>& enemyPreCards, std::array<Card*, 3>& enemyActiveCards);
 private:
      std::vector<Card*> preCards;
 };

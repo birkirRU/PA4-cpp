@@ -26,7 +26,7 @@ void BattleManager::initBattle() {
 void BattleManager::initializeTurn() {
 
     board.moveEnemyPreCardsToActive();
-    enemy.randomPreRow(board.enemyPreCards);
+    enemy.randomPreRow(board.enemyPreCards, board.enemyActiveCards);
     board.printFullBoard();
 
 
