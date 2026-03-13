@@ -53,6 +53,11 @@ void BattleManager::initializeTurn() {
 }
 
 void BattleManager::playTurn() {
+    // This needs to be changed. 
+    // The enemy should place cards to PreEnemy row only at end of players turn
+    // all cards in PreEnemy row should be moved to Enemy row at the start of enemy turn . 
+    // and then its attack should be resolved 
+    //     This could be implamented in the Board class.
     enemy.drawCard();
     if (!enemy.hand.empty()) {
         for (int s = 0; s < 3; ++s) {
