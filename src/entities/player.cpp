@@ -59,12 +59,19 @@ bool Player::playCard(Board& board) {
         return true;
     }
 
-    if (board.getCardAt(entityType::PLAYER, pos)) {
-        std::cout << "Position " << pos << " is already occupied. Pick an empty position (0, 1, or 2)." << '\n';
-        return true;
-    }
-
-    if (chosen->bloodCost > 0) {
+    Card* atPos = board.getCardAt(entityType::PLAYER, pos);
+    if (atPos) {
+        if (chosen->bloodCost == 0) {
+            std::cout << "Replacing " << atPos->name << " with " << chosen->name << "." << '\n';
+            board.removeCard(entityType::PLAYER, atPos);
+        } else {
+            std::cout << chosen->name << " costs " << chosen->bloodCost << " blood. The card in position " << pos << " counts as 1." << '\n';
+            if (!sacrifice(board, chosen->bloodCost, pos)) {
+                std::cout << "Placement cancelled." << '\n';
+                return true;
+            }
+        }
+    } else if (chosen->bloodCost > 0) {
         std::cout << chosen->name << " costs " << chosen->bloodCost << " blood. You must sacrifice that many cards from your row first." << '\n';
         if (!sacrifice(board, chosen->bloodCost)) {
             std::cout << "Placement cancelled." << '\n';
@@ -79,11 +86,20 @@ bool Player::playCard(Board& board) {
 }
 
 bool Player::sacrifice(Board& board, int bloodCost) {
+    return sacrifice(board, bloodCost, -1);
+}
+
+bool Player::sacrifice(Board& board, int bloodCost, int positionCountsAsSacrifice) {
     if (bloodCost <= 0) return true;
 
     int onBoard = 0;
     for (int s = 0; s < 3; ++s) {
         if (board.getCardAt(entityType::PLAYER, s)) ++onBoard;
+    }
+    int needFromUser = bloodCost;
+    if (positionCountsAsSacrifice >= 0 && positionCountsAsSacrifice <= 2 &&
+            board.getCardAt(entityType::PLAYER, positionCountsAsSacrifice)) {
+        needFromUser = bloodCost - 1;
     }
     if (onBoard < bloodCost) {
         std::cout << "You need " << bloodCost << " blood but only have " << onBoard
@@ -91,15 +107,26 @@ bool Player::sacrifice(Board& board, int bloodCost) {
         return false;
     }
 
-    std::cout << "Sacrifice " << bloodCost << " card(s). Enter " << bloodCost
-            << " position(s) (0, 1, or 2), one per card, e.g. ";
-    if (bloodCost == 1) std::cout << "0";
-    else if (bloodCost == 2) std::cout << "0 1";
+    if (needFromUser == 0) {
+        Card* card = board.getCardAt(entityType::PLAYER, positionCountsAsSacrifice);
+        if (card) board.removeCard(entityType::PLAYER, card);
+        std::cout << "Sacrificed 1 card (position " << positionCountsAsSacrifice << ")." << '\n';
+        return true;
+    }
+
+    std::cout << "Sacrifice " << bloodCost << " card(s). ";
+    if (needFromUser < bloodCost)
+        std::cout << "Position " << positionCountsAsSacrifice << " counts as 1. ";
+    std::cout << "Enter " << needFromUser << " more position(s) (0, 1, or 2), e.g. ";
+    if (needFromUser == 1) std::cout << "0";
+    else if (needFromUser == 2) std::cout << "0 1";
     else std::cout << "0 1 2";
     std::cout << ": ";
 
     std::vector<int> positions;
-    for (int i = 0; i < bloodCost; ++i) {
+    if (positionCountsAsSacrifice >= 0 && positionCountsAsSacrifice <= 2)
+        positions.push_back(positionCountsAsSacrifice);
+    for (int i = 0; i < needFromUser; ++i) {
         int pos;
         std::cin >> pos;
         if (pos < 0 || pos > 2) {
@@ -108,6 +135,10 @@ bool Player::sacrifice(Board& board, int bloodCost) {
         }
         if (!board.getCardAt(entityType::PLAYER, pos)) {
             std::cout << "Position " << pos << " has no card to sacrifice." << '\n';
+            return false;
+        }
+        if (positionCountsAsSacrifice >= 0 && pos == positionCountsAsSacrifice) {
+            std::cout << "Position " << pos << " is already counted. Pick " << needFromUser << " other position(s)." << '\n';
             return false;
         }
         positions.push_back(pos);
@@ -122,8 +153,8 @@ bool Player::sacrifice(Board& board, int bloodCost) {
         }
     }
 
-    for (int pos : positions) {
-        Card* card = board.getCardAt(entityType::PLAYER, pos);
+    for (int p : positions) {
+        Card* card = board.getCardAt(entityType::PLAYER, p);
         if (card) board.removeCard(entityType::PLAYER, card);
     }
     std::cout << "Sacrificed " << bloodCost << " card(s)." << '\n';

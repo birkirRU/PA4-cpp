@@ -16,5 +16,7 @@ public:
     /** Returns true if a card was placed (continue turn), false if player chose to end turn (0/done) or hand empty. */
     bool playCard(Board& board);
     bool sacrifice(Board& board, int bloodCost);
+    /** Same but \a positionCountsAsSacrifice (0-2) is already chosen as one sacrifice (e.g. placing on that square). */
+    bool sacrifice(Board& board, int bloodCost, int positionCountsAsSacrifice);
 };
 #endif // ENTITIES_PLAYER_H_

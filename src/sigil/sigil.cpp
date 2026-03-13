@@ -36,12 +36,15 @@ void FledglingSigil::onTurnEnd(CombatContext& ctx) {
     if (!ctx.attacker) return;
 
     if (ctx.attacker->isBase) {
-        ctx.attacker->damage += 2;
-        ctx.attacker->health += 1;
+        ctx.attacker->name = "Wolf";
+        ctx.attacker->health = 3;
+        ctx.attacker->damage = 2;
+        ctx.attacker->bloodCost = 2;
         ctx.attacker->sigils = {SigilName::MIGHTY_LEAP};
     } else {
         ctx.attacker->damage += 1;
         ctx.attacker->health += 2;
+        ctx.attacker->sigils.clear();
     }
 }
 

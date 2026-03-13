@@ -54,7 +54,16 @@ void BattleManager::initializeTurn(int round) {
 }
 
 void BattleManager::playTurn() {
+    std::cout << "\n--- Your attacks ---\n";
     board.resolveCombat(entityType::PLAYER);
+    std::cout << "Board after your attacks:\n";
+    board.printFullBoard();
+
+    std::cout << "\n--- Enemy attacks ---\n";
+    board.moveEnemyPreCardsToActive();
     board.resolveCombat(entityType::ENEMY);
+    std::cout << "Board after enemy attacks:\n";
+    board.printFullBoard();
+
     board.onTurnEnd();
 }

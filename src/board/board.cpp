@@ -229,23 +229,33 @@ void Board::resolveAttack(CombatContext& ctx) {
         }
     }
 
+    int damage = ctx.attacker->damage;
+    const char* sideName = ctx.attackerIsPlayer ? "Player" : "Enemy";
+
     if (ctx.blockers.empty()) {
-        damagePlayer(ctx.attacker->damage, ctx.attackerIsPlayer);
+        if (damage > 0) {
+            std::cout << sideName << " " << ctx.attacker->name << " attacked for " << damage << " damage (no blocker)." << "\n";
+            damagePlayer(damage, ctx.attackerIsPlayer);
+        }
     } else {
         for (Card* blocker : ctx.blockers) {
-            if (blocker && ctx.attacker->damage > 0) {
+            if (blocker && damage > 0) {
                 int blockerHealthBefore = blocker->health;
-                blocker->health -= ctx.attacker->damage;
+                blocker->health -= damage;
 
-                int overflow = 0;
+                std::cout << sideName << " " << ctx.attacker->name << " (" << damage << " dmg) hit " << blocker->name;
                 if (blocker->health <= 0) {
-                    overflow = ctx.attacker->damage - blockerHealthBefore;
+                    int overflow = damage - blockerHealthBefore;
+                    std::cout << " — " << blocker->name << " killed.";
+                    if (overflow > 0) {
+                        std::cout << " " << overflow << " overflow to face.";
+                        damagePlayer(overflow, ctx.attackerIsPlayer);
+                    }
+                    std::cout << "\n";
                     entityType blockerSide = ctx.attackerIsPlayer ? entityType::ENEMY : entityType::PLAYER;
                     removeCard(blockerSide, blocker);
-                }
-
-                if (overflow > 0) {
-                    damagePlayer(overflow, ctx.attackerIsPlayer);
+                } else {
+                    std::cout << " — " << blocker->name << " has " << blocker->health << " HP left.\n";
                 }
 
                 for (SigilName sigilName : blocker->sigils) {
